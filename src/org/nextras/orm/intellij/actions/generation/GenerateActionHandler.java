@@ -15,6 +15,7 @@ import com.intellij.psi.tree.IElementType;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.PhpLanguage;
 import com.jetbrains.php.lang.actions.PhpNamedElementNode;
+import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.impl.PhpDocPropertyImpl;
 import com.jetbrains.php.lang.lexer.PhpTokenTypes;
 import com.jetbrains.php.lang.parser.PhpElementTypes;
@@ -113,6 +114,9 @@ public abstract class GenerateActionHandler implements CodeInsightActionHandler
 	}
 
 
+	protected abstract boolean canShow(PhpDocProperty property, PhpClass phpClass);
+
+
 	protected abstract String createAccessors(Field field, Project project);
 
 
@@ -127,7 +131,7 @@ public abstract class GenerateActionHandler implements CodeInsightActionHandler
 	{
 		ArrayList<Field> fields = new ArrayList<Field>();
 		for (Field field : phpClass.getFields()) {
-			if (field instanceof PhpDocPropertyImpl) {
+			if (field instanceof PhpDocPropertyImpl && GenerateActionHandler.this.canShow((PhpDocProperty) field, phpClass)) {
 				fields.add(field);
 			}
 		}
