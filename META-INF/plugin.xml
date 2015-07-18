@@ -1,0 +1,42 @@
+<idea-plugin version="2">
+	<id>org.nextras.orm.intellij</id>
+	<name>Nextras Orm Plugin</name>
+	<version>0.1</version>
+	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.cz">Nextras</vendor>
+
+	<description><![CDATA[
+			Provides support for <a href="https://github.com/nextras/orm/">Nextras ORM</a> &ndash; an ORM library for PHP.
+	]]></description>
+
+	<change-notes><![CDATA[
+		<p>0.1.0</p>
+		<ul>
+			<li>basic support for ORM Entity getters/setters generation</li>
+		</ul>
+    ]]>
+	</change-notes>
+
+	<idea-version since-build="131"/>
+
+	<depends>com.jetbrains.php</depends>
+	<depends>com.intellij.modules.platform</depends>
+
+	<actions>
+		<action id="ormGenerateSettersAction" class="org.nextras.orm.intellij.actions.generation.GenerateSettersAction"
+		        text="ORM Setters..."
+		        description="Generate ORM Setters">
+			<add-to-group group-id="GenerateGroup" anchor="first"/>
+		</action>
+		<action id="ormGenerateGettersSettersAction"
+		        class="org.nextras.orm.intellij.actions.generation.GenerateGettersSettersAction"
+		        text="ORM Getters and Setters..."
+		        description="Generate ORM Getters and Setters">
+			<add-to-group group-id="GenerateGroup" anchor="first"/>
+		</action>
+		<action id="ormGenerateGettersAction" class="org.nextras.orm.intellij.actions.generation.GenerateGettersAction"
+		        text="ORM Getters..."
+		        description="Generate ORM Getters">
+			<add-to-group group-id="GenerateGroup" anchor="first"/>
+		</action>
+	</actions>
+</idea-plugin>
