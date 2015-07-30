@@ -19,14 +19,6 @@ public class PhpDocPropertyTagParser extends com.jetbrains.php.lang.documentatio
 	}
 
 
-	public boolean parseContents(PhpPsiBuilder builder)
-	{
-		parseTypes(builder);
-		parseProperty(builder);
-		return true;
-	}
-
-
 	protected static void parseValue(PhpPsiBuilder builder)
 	{
 		PsiBuilder.Marker value = builder.mark();
