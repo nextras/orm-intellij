@@ -22,6 +22,7 @@
 	<depends>com.intellij.modules.platform</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<completion.contributor language="PHP" implementationClass="org.nextras.orm.intellij.completion.OrmCompletionContributor"/>
 		<lang.parserDefinition language="PHP" implementationClass="org.nextras.orm.intellij.parser.PhpParserDefinition" />
 	</extensions>
 
