@@ -21,6 +21,10 @@
 	<depends>com.jetbrains.php</depends>
 	<depends>com.intellij.modules.platform</depends>
 
+	<extensions defaultExtensionNs="com.intellij">
+		<lang.parserDefinition language="PHP" implementationClass="org.nextras.orm.intellij.parser.PhpParserDefinition" />
+	</extensions>
+
 	<actions>
 		<action id="ormGenerateSettersAction" class="org.nextras.orm.intellij.actions.generation.GenerateSettersAction"
 		        text="ORM Setters..."
