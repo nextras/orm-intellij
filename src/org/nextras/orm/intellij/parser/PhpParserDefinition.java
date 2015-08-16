@@ -11,5 +11,6 @@ public class PhpParserDefinition extends com.jetbrains.php.lang.parser.PhpParser
 		super();
 		new PhpDocParser(); //initialize phpdoc parser registry
 		PhpDocTagParserRegistry.register("@property", new PhpDocPropertyTagParser());
+		PhpDocTagParserRegistry.register("@property-read", new PhpDocPropertyTagParser());
 	}
 }
