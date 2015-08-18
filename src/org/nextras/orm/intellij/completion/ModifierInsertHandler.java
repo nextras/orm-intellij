@@ -38,7 +38,12 @@ public class ModifierInsertHandler implements InsertHandler<LookupElement>
 			newOffset++;
 		}
 
-		if (currElement != null && !(currElement.getNode().getElementType().equals(PhpDocPropertyTagParser.DOC_RBRACE))) {
+		PsiElement testElement = currElement;
+		if (testElement!= null && !(testElement.getNode().getElementType().equals(PhpDocPropertyTagParser.DOC_WHITESPACE))) {
+			testElement = testElement.getNextSibling();
+		}
+
+		if (testElement != null && !(testElement.getNode().getElementType().equals(PhpDocPropertyTagParser.DOC_RBRACE))) {
 			buffer.append('}');
 		}
 
