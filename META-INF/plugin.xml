@@ -2,7 +2,7 @@
 	<id>org.nextras.orm.intellij</id>
 	<name>Nextras Orm Plugin</name>
 	<version>0.1</version>
-	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.cz">Nextras</vendor>
+	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.org">Nextras</vendor>
 
 	<description><![CDATA[
 			Provides support for <a href="https://github.com/nextras/orm/">Nextras ORM</a> &ndash; an ORM library for PHP.
@@ -12,6 +12,7 @@
 		<p>0.1.0</p>
 		<ul>
 			<li>basic support for ORM Entity getters/setters generation</li>
+			<li>completion for modifier names</li>
 		</ul>
     ]]>
 	</change-notes>
@@ -23,7 +24,7 @@
 
 	<extensions defaultExtensionNs="com.intellij">
 		<completion.contributor language="PHP" implementationClass="org.nextras.orm.intellij.completion.OrmCompletionContributor"/>
-		<lang.parserDefinition language="PHP" implementationClass="org.nextras.orm.intellij.parser.PhpParserDefinition" />
+		<lang.parserDefinition language="PHP" implementationClass="org.nextras.orm.intellij.parser.PhpParserDefinition"/>
 	</extensions>
 
 	<actions>
