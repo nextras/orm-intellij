@@ -25,6 +25,8 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<completion.contributor language="PHP" implementationClass="org.nextras.orm.intellij.completion.OrmCompletionContributor"/>
 		<lang.parserDefinition language="PHP" implementationClass="org.nextras.orm.intellij.parser.PhpParserDefinition" order="first"/>
+		<annotator language="PHP" implementationClass="org.nextras.orm.intellij.annotator.ModifierHighlighterAnnotator"/>
+		<colorSettingsPage implementation="org.nextras.orm.intellij.annotator.highlighter.ModifierHighlighterSettings"/>
 	</extensions>
 
 	<actions>

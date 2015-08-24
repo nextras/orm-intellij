@@ -1,0 +1,11 @@
+package org.nextras.orm.intellij.annotator.highlighter;
+
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+
+
+public class ModifierHighlighter
+{
+	public static final TextAttributesKey MODIFIER = TextAttributesKey.createTextAttributesKey("MODIFIER", DefaultLanguageHighlighterColors.KEYWORD);
+	public static final TextAttributesKey BRACKETS = TextAttributesKey.createTextAttributesKey("BRACKETS", DefaultLanguageHighlighterColors.BRACKETS);
+}
