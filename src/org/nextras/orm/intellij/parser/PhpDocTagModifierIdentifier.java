@@ -4,9 +4,9 @@ import com.intellij.lang.ASTNode;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.impl.tags.PhpDocParamTagImpl;
 
 
-public class PhpDocTagModifierParameterName extends PhpDocParamTagImpl
+public class PhpDocTagModifierIdentifier extends PhpDocParamTagImpl
 {
-	public PhpDocTagModifierParameterName(ASTNode node)
+	public PhpDocTagModifierIdentifier(ASTNode node)
 	{
 		super(node);
 	}

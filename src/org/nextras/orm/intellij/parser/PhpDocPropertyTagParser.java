@@ -1,6 +1,8 @@
 package org.nextras.orm.intellij.parser;
 
 import com.intellij.lang.PsiBuilder;
+import com.jetbrains.php.lang.documentation.phpdoc.lexer.PhpDocTokenTypes;
+import com.jetbrains.php.lang.documentation.phpdoc.parser.PhpDocElementTypes;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType;
 import com.jetbrains.php.lang.parser.PhpPsiBuilder;
 
@@ -56,12 +58,17 @@ public class PhpDocPropertyTagParser extends com.jetbrains.php.lang.documentatio
 		}
 		modifierName.done(PhpDocTypes.phpDocTagModifierName);
 
-		PsiBuilder.Marker modifierKey = builder.mark();
-		while (!builder.compare(DOC_RBRACE) && !builder.compare(DOC_TAG_VALUE_END) && !builder.eof()) {
-			builder.advanceLexer();
+		PsiBuilder.Marker modifierKey;
+		while (true) {
+			if (builder.eof() || builder.compare(DOC_TAG_VALUE_END) || builder.compareAndEat(DOC_RBRACE)) {
+				break;
+			} else if (builder.compare(DOC_IDENTIFIER) || builder.compare(DOC_STRING)) {
+				modifierKey = builder.mark();
+				builder.advanceLexer();
+				modifierKey.done(PhpDocTypes.phpDocTagModifierIdentifier);
+			} else {
+				builder.advanceLexer();
+			}
 		}
-		modifierKey.done(PhpDocTypes.phpDocTagModifierParameterName);
-
-		builder.compareAndEat(DOC_RBRACE);
 	}
 }
