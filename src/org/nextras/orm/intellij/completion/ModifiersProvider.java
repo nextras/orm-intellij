@@ -25,9 +25,8 @@ public class ModifiersProvider extends CompletionProvider<CompletionParameters>
 		result.addElement(LookupElementBuilder.create("1:m").withInsertHandler(withParams));
 		result.addElement(LookupElementBuilder.create("m:1").withInsertHandler(withParams));
 		result.addElement(LookupElementBuilder.create("1:1").withInsertHandler(withParams));
-		result.addElement(LookupElementBuilder.create("1:1d").withInsertHandler(withParams));
-		result.addElement(LookupElementBuilder.create("m:n").withInsertHandler(withParams));
+		result.addElement(LookupElementBuilder.create("m:m").withInsertHandler(withParams));
 		result.addElement(LookupElementBuilder.create("primary").withInsertHandler(withoutParams));
+		result.addElement(LookupElementBuilder.create("primary-proxy").withInsertHandler(withoutParams));
 	}
-
 }
