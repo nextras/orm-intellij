@@ -1,6 +1,7 @@
 package org.nextras.orm.intellij.parser;
 
 import com.intellij.lang.PsiBuilder;
+import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType;
 import com.jetbrains.php.lang.parser.PhpPsiBuilder;
 
 
@@ -31,9 +32,7 @@ public class PhpDocPropertyTagParser extends com.jetbrains.php.lang.documentatio
 			if (builder.compare(DOC_LBRACE)) {
 				PsiBuilder.Marker modifier = builder.mark();
 				builder.advanceLexer();
-				while (!builder.compareAndEat(DOC_RBRACE) && !builder.compare(DOC_TAG_VALUE_END) && !builder.eof()) {
-					builder.advanceLexer();
-				}
+				parseModifierContent(builder);
 				modifier.done(PhpDocTypes.phpDocTagModifier);
 			} else {
 				break;
@@ -46,5 +45,23 @@ public class PhpDocPropertyTagParser extends com.jetbrains.php.lang.documentatio
 		}
 
 		value.done(phpDocTagValue);
+	}
+
+
+	private static void parseModifierContent(PhpPsiBuilder builder)
+	{
+		PsiBuilder.Marker modifierName = builder.mark();
+		while (!builder.compare(DOC_RBRACE) && !builder.compare(DOC_TAG_VALUE_END) && !builder.eof() && !(builder.getTokenText() != null && builder.getTokenText().equals(" "))) {
+			builder.advanceLexer();
+		}
+		modifierName.done(PhpDocTypes.phpDocTagModifierName);
+
+		PsiBuilder.Marker modifierKey = builder.mark();
+		while (!builder.compare(DOC_RBRACE) && !builder.compare(DOC_TAG_VALUE_END) && !builder.eof()) {
+			builder.advanceLexer();
+		}
+		modifierKey.done(PhpDocTypes.phpDocTagModifierParameterName);
+
+		builder.compareAndEat(DOC_RBRACE);
 	}
 }
