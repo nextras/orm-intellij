@@ -27,7 +27,7 @@ public class ModifierHighlighterAnnotator implements Annotator
 
 		IElementType type = psiElement.getNode().getElementType();
 		if (type == PhpDocTokenTypes.DOC_LBRACE || type == PhpDocTokenTypes.DOC_RBRACE) {
-			annotationHolder.createInfoAnnotation(psiElement, null).setTextAttributes(ModifierHighlighter.BRACKETS);
+			annotationHolder.createInfoAnnotation(psiElement, null).setTextAttributes(ModifierHighlighter.BRACES);
 		} else {
 			annotationHolder.createInfoAnnotation(psiElement, null).setTextAttributes(ModifierHighlighter.MODIFIER);
 		}

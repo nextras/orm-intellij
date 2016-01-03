@@ -17,8 +17,8 @@ import java.util.Map;
 public class ModifierHighlighterSettings implements ColorSettingsPage
 {
 	private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
-			new AttributesDescriptor("Modifier", ModifierHighlighter.MODIFIER),
-			new AttributesDescriptor("Brackets", ModifierHighlighter.BRACKETS),
+			new AttributesDescriptor("Modifier name", ModifierHighlighter.MODIFIER),
+			new AttributesDescriptor("Modifier braces", ModifierHighlighter.BRACES),
 	};
 
 
