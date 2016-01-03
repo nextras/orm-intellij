@@ -9,6 +9,12 @@
 	]]></description>
 
 	<change-notes><![CDATA[
+		<p>0.2.0</p>
+		<ul>
+			<li>basic support for modifiers highlighting</li>
+			<li>container modifier's argument is treated as ClassName</li>
+			<li>updated modifier names for ORM 2.0</li>
+		</ul>
 		<p>0.1.0</p>
 		<ul>
 			<li>basic support for ORM Entity getters/setters generation</li>
