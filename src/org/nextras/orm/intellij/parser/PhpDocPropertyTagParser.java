@@ -53,7 +53,19 @@ public class PhpDocPropertyTagParser extends com.jetbrains.php.lang.documentatio
 	private static void parseModifierContent(PhpPsiBuilder builder)
 	{
 		PsiBuilder.Marker modifierName = builder.mark();
-		while (!builder.compare(DOC_RBRACE) && !builder.compare(DOC_TAG_VALUE_END) && !builder.eof() && !(builder.getTokenText() != null && builder.getTokenText().equals(" "))) {
+		while (!builder.compare(DOC_RBRACE) && !builder.compare(DOC_TAG_VALUE_END) && !builder.eof()) {
+			if (builder.getTokenText() != null) {
+				// fix {m:1 foo} parsed as ["m", ":1 ", "foo"]
+				String tagText = builder.getTokenText();
+				if (tagText.equals(" ")) {
+					break;
+				}
+				if (tagText.indexOf(':') == 0 && tagText.endsWith(" ") && tagText.length() == 3) {
+					builder.advanceLexer();
+					break;
+				}
+			}
+
 			builder.advanceLexer();
 		}
 		modifierName.done(PhpDocTypes.phpDocTagModifierName);
