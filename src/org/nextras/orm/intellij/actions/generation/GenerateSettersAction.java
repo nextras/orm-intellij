@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GenerateSettersAction extends CodeInsightAction
 {
-	private final GenerateActionHandler actionHandler = new GenerateActionHandler ()
+	private final GenerateActionHandler actionHandler = new GenerateActionHandler()
 	{
 		@Override
 		protected boolean canShow(PhpDocProperty property, PhpClass phpClass)

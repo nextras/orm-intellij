@@ -25,8 +25,8 @@ import com.jetbrains.php.lang.psi.PhpFile;
 import com.jetbrains.php.lang.psi.elements.Field;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.refactoring.importReferences.PhpClassReferenceResolver;
-import org.nextras.orm.intellij.utils.PhpClassUtils;
 import org.jetbrains.annotations.NotNull;
+import org.nextras.orm.intellij.utils.PhpClassUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

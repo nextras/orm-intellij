@@ -1,9 +1,6 @@
 package org.nextras.orm.intellij.parser;
 
 import com.intellij.lang.PsiBuilder;
-import com.jetbrains.php.lang.documentation.phpdoc.lexer.PhpDocTokenTypes;
-import com.jetbrains.php.lang.documentation.phpdoc.parser.PhpDocElementTypes;
-import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType;
 import com.jetbrains.php.lang.parser.PhpPsiBuilder;
 
 
