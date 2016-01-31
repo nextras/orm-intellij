@@ -20,8 +20,7 @@
 			<li>basic support for ORM Entity getters/setters generation</li>
 			<li>completion for modifier names</li>
 		</ul>
-    ]]>
-	</change-notes>
+    ]]></change-notes>
 
 	<idea-version since-build="131"/>
 
