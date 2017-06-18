@@ -32,6 +32,7 @@
 		<lang.parserDefinition language="PHP" implementationClass="org.nextras.orm.intellij.parser.PhpParserDefinition" order="first"/>
 		<annotator language="PHP" implementationClass="org.nextras.orm.intellij.annotator.ModifierHighlighterAnnotator"/>
 		<colorSettingsPage implementation="org.nextras.orm.intellij.annotator.highlighter.ModifierHighlighterSettings"/>
+		<psi.referenceContributor language="PHP" implementation="org.nextras.orm.intellij.reference.OrmReferenceContributor"/>
 	</extensions>
 
 	<actions>
