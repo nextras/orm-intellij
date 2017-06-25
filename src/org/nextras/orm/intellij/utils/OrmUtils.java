@@ -1,5 +1,6 @@
 package org.nextras.orm.intellij.utils;
 
+import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 
 import java.util.regex.Matcher;
@@ -10,6 +11,11 @@ public class OrmUtils
 {
 	private static final Pattern entityPattern = Pattern.compile("(?:@entity\\s+([a-zA-Z0-9_\\\\]+))");
 
+	public static boolean isEntity(PhpClass cls, PhpIndex phpIndex)
+	{
+		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Entity\\IEntity");
+		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
+	}
 
 	public static String findRepositoryEntities(PhpClass repositoryClass)
 	{

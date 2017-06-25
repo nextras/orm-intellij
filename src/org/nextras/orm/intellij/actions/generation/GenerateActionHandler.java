@@ -26,6 +26,7 @@ import com.jetbrains.php.lang.psi.elements.Field;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.refactoring.importReferences.PhpClassReferenceResolver;
 import org.jetbrains.annotations.NotNull;
+import org.nextras.orm.intellij.utils.OrmUtils;
 import org.nextras.orm.intellij.utils.PhpClassUtils;
 
 import java.util.ArrayList;
@@ -47,9 +48,8 @@ public abstract class GenerateActionHandler implements CodeInsightActionHandler
 		}
 
 		PhpIndex phpIndex = PhpIndex.getInstance(project);
-		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Entity\\IEntity");
 
-		return PhpClassUtils.isImplementationOfInterface(phpClass, entityInterface);
+		return OrmUtils.isEntity(phpClass, phpIndex);
 	}
 
 
