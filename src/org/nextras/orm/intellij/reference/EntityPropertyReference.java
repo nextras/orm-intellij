@@ -13,6 +13,7 @@ import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.nextras.orm.intellij.utils.OrmUtils;
 import org.nextras.orm.intellij.utils.PhpClassUtils;
 import org.nextras.orm.intellij.utils.PhpIndexUtils;
 
@@ -39,8 +40,7 @@ public class EntityPropertyReference extends PsiPolyVariantReferenceBase<StringL
 		ArrayList<ResolveResult> result = new ArrayList<ResolveResult>();
 		PhpIndex phpIndex = PhpIndex.getInstance(this.getElement().getProject());
 		for (PhpClass cls : PhpIndexUtils.getByType(method.getClassReference().getType(), phpIndex)) {
-			PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Entity\\IEntity");
-			if (!PhpClassUtils.isImplementationOfInterface(cls, entityInterface)) {
+			if (!OrmUtils.isEntity(cls, phpIndex)) {
 				continue;
 			}
 			final Field field = cls.findFieldByName(expr.getContents(), false);

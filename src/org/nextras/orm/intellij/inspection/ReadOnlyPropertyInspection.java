@@ -13,6 +13,7 @@ import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
+import org.nextras.orm.intellij.utils.OrmUtils;
 import org.nextras.orm.intellij.utils.PhpClassUtils;
 import org.nextras.orm.intellij.utils.PhpIndexUtils;
 
@@ -55,8 +56,7 @@ public class ReadOnlyPropertyInspection extends PhpInspection
 		PhpIndex phpIndex = PhpIndex.getInstance(fieldReference.getProject());
 		Collection<PhpClass> classes = PhpIndexUtils.getByType(fieldReference.getClassReference().getType(), phpIndex);
 		for (PhpClass cls : classes) {
-			PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Entity\\IEntity");
-			if (!PhpClassUtils.isImplementationOfInterface(cls, entityInterface)) {
+			if (!OrmUtils.isEntity(cls, phpIndex)) {
 				continue;
 			}
 			Field field = cls.findFieldByName(fieldReference.getName(), false);
