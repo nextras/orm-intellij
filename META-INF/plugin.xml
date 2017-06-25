@@ -33,6 +33,12 @@
 		<annotator language="PHP" implementationClass="org.nextras.orm.intellij.annotator.ModifierHighlighterAnnotator"/>
 		<colorSettingsPage implementation="org.nextras.orm.intellij.annotator.highlighter.ModifierHighlighterSettings"/>
 		<psi.referenceContributor language="PHP" implementation="org.nextras.orm.intellij.reference.OrmReferenceContributor"/>
+        <localInspection language="PHP"
+                         implementationClass="org.nextras.orm.intellij.inspection.ReadOnlyPropertyInspection"
+                         shortName="NextrasOrmReadOnlyProperty" id="NextrasOrmReadOnlyProperty"
+                         displayName="Read only property check"
+                         groupName="Nextras"
+                         level="WARNING"/>
 	</extensions>
 
 	<actions>
