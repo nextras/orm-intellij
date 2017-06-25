@@ -14,6 +14,7 @@ import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.lang.psi.elements.ParameterList;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.jetbrains.annotations.NotNull;
+import org.nextras.orm.intellij.utils.OrmUtils;
 import org.nextras.orm.intellij.utils.PhpIndexUtils;
 
 public class SetValueCompletionProvider extends CompletionProvider<CompletionParameters> {
@@ -38,6 +39,9 @@ public class SetValueCompletionProvider extends CompletionProvider<CompletionPar
 		}
 		PhpIndex phpIndex = PhpIndex.getInstance(el.getProject());
 		for (PhpClass cls : PhpIndexUtils.getByType(methodReference.getClassReference().getType(), phpIndex)) {
+			if (!OrmUtils.isEntity(cls, phpIndex)) {
+				continue;
+			}
 			for (Field field : cls.getFields()) {
 				if (!(field instanceof PhpDocProperty)) {
 					continue;
