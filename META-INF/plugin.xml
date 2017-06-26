@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>org.nextras.orm.intellij</id>
 	<name>Nextras Orm Plugin</name>
-	<version>0.2</version>
+	<version>0.3</version>
 	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.org">Nextras</vendor>
 
 	<description><![CDATA[
@@ -9,6 +9,13 @@
 	]]></description>
 
 	<change-notes><![CDATA[
+		<p>0.3.0</p>
+		<ul>
+			<li>field name completion in setValue/setReadOnlyValue</li>
+			<li>references from setValue/setReadOnlyValue to field on an entity (goto, refactoring)</li>
+			<li>@propety-read inspection with quick fix</li>
+			<li>whole setReadOnlyValue expression completion</li>
+		</ul>
 		<p>0.2.0</p>
 		<ul>
 			<li>basic support for modifiers highlighting</li>
