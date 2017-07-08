@@ -17,6 +17,21 @@ public class OrmUtils
 		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
 	}
 
+
+	public static boolean isRepository(PhpClass cls, PhpIndex phpIndex)
+	{
+		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Repository\\IRepository");
+		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
+	}
+
+
+	public static boolean isMapper(PhpClass cls, PhpIndex phpIndex)
+	{
+		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Mapper\\IMapper");
+		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
+	}
+
+
 	public static String findRepositoryEntities(PhpClass repositoryClass)
 	{
 		if (repositoryClass.getDocComment() == null) {

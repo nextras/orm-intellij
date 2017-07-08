@@ -46,6 +46,7 @@
 		        displayName="Read only property check"
 		        groupName="Nextras"
 		        level="WARNING"/>
+		<codeInsight.lineMarkerProvider language="PHP" implementationClass="org.nextras.orm.intellij.reference.RepositoryMapperMethodMarkerProvider"/>
 	</extensions>
 
 	<actions>
