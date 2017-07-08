@@ -1,7 +1,7 @@
 <idea-plugin version="2">
 	<id>org.nextras.orm.intellij</id>
 	<name>Nextras Orm Plugin</name>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.org">Nextras</vendor>
 
 	<description><![CDATA[
@@ -9,6 +9,12 @@
 	]]></description>
 
 	<change-notes><![CDATA[
+		<p>0.4.2</p>
+		<ul>
+		    <li>add referece searcher</li>
+		    <li>add support for HasMany::get()</li>
+		    <li>fixes, refactoring</li>
+		</ul>
 		<p>0.4.1</p>
 
 		<p>0.4.0</p>
