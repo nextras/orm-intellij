@@ -4,27 +4,30 @@ import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class PhpIndexUtils
 {
 
 	public static Collection<PhpClass> getByType(PhpType type, PhpIndex phpIndex)
 	{
-		return getByType(type, phpIndex, new HashSet<String>());
+		return getByType(type, phpIndex, new HashSet<String>(), (Set<String>) null, 0);
 	}
 
-	private static Collection<PhpClass> getByType(PhpType type, PhpIndex phpIndex, Set<String> visited)
+	public static Collection<PhpClass> getByType(PhpType type, PhpIndex phpIndex, @Nullable Set<String> phpIndexVisited, int phpIndexDepth)
+	{
+		return getByType(type, phpIndex, new HashSet<String>(), phpIndexVisited, phpIndexDepth);
+	}
+
+	private static Collection<PhpClass> getByType(PhpType type, PhpIndex phpIndex, Set<String> visited, @Nullable Set<String> phpIndexVisited, int phpIndexDepth)
 	{
 		Set<String> types = type.getTypes();
-		return getByType(types.toArray(new String[types.size()]), phpIndex, visited);
+		return getByType(types.toArray(new String[types.size()]), phpIndex, visited, phpIndexVisited, phpIndexDepth);
 	}
 
-	public static Collection<PhpClass> getByType(String[] types, PhpIndex phpIndex, Set<String> visited)
+	private static Collection<PhpClass> getByType(String[] types, PhpIndex phpIndex, Set<String> visited, @Nullable Set<String> phpIndexVisited, int phpIndexDepth)
 	{
 		Collection<PhpClass> classes = new ArrayList<PhpClass>();
 		for (String className : types) {
@@ -32,7 +35,7 @@ public class PhpIndexUtils
 				//do nothing
 			} else if (className.startsWith("#")) {
 				visited.add(className);
-				classes.addAll(getBySignature(className, phpIndex, visited));
+				classes.addAll(getBySignature(className, phpIndex, visited, phpIndexVisited, phpIndexDepth));
 			} else {
 				classes.addAll(phpIndex.getAnyByFQN(className));
 			}
@@ -41,11 +44,11 @@ public class PhpIndexUtils
 		return classes;
 	}
 
-	private static Collection<PhpClass> getBySignature(String sig, PhpIndex phpIndex, Set<String> visited)
+	private static Collection<PhpClass> getBySignature(String sig, PhpIndex phpIndex, Set<String> visited, @Nullable Set<String> phpIndexVisited, int phpIndexDepth)
 	{
 		Collection<PhpClass> classes = new ArrayList<PhpClass>();
 		for (PhpNamedElement el : phpIndex.getBySignature(sig)) {
-			classes.addAll(getByType(el.getType(), phpIndex, visited));
+			classes.addAll(getByType(el.getType(), phpIndex, visited, phpIndexVisited, phpIndexDepth));
 		}
 
 		return classes;

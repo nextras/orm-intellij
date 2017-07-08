@@ -50,6 +50,7 @@
 	</extensions>
 	<extensions defaultExtensionNs="com.jetbrains.php">
 		<typeProvider3 implementation="org.nextras.orm.intellij.typeProvider.PersistenceMethodsTypeProvider"/>
+		<typeProvider3 implementation="org.nextras.orm.intellij.typeProvider.CollectionTypeProvider"/>
 	</extensions>
 
 	<actions>

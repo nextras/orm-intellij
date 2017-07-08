@@ -18,23 +18,35 @@ public class OrmUtils
 {
 	private static final Pattern entityPattern = Pattern.compile("(?:@entity\\s+([a-zA-Z0-9_\\\\]+))");
 
+	public static final String COLLECTION_CLASS = "\\Nextras\\Orm\\Collection\\ICollection";
+	public static final String MAPPER_CLASS = "\\Nextras\\Orm\\Mapper\\IMapper";
+	public static final String REPOSITORY_CLASS = "\\Nextras\\Orm\\Repository\\IRepository";
+	public static final String ENTITY_CLASS = "\\Nextras\\Orm\\Entity\\IEntity";
+
 	public static boolean isEntity(PhpClass cls, PhpIndex phpIndex)
 	{
-		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Entity\\IEntity");
+		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, ENTITY_CLASS);
 		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
 	}
 
 
 	public static boolean isRepository(PhpClass cls, PhpIndex phpIndex)
 	{
-		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Repository\\IRepository");
+		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, REPOSITORY_CLASS);
 		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
 	}
 
 
 	public static boolean isMapper(PhpClass cls, PhpIndex phpIndex)
 	{
-		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Mapper\\IMapper");
+		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, MAPPER_CLASS);
+		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
+	}
+
+
+	public static boolean isCollection(PhpClass cls, PhpIndex phpIndex)
+	{
+		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, COLLECTION_CLASS);
 		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
 	}
 
