@@ -9,13 +9,16 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.tags.PhpDocPropertyTag;
 import com.jetbrains.php.lang.psi.elements.*;
+import org.bouncycastle.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.nextras.orm.intellij.utils.OrmUtils;
 import org.nextras.orm.intellij.utils.PhpClassUtils;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -72,21 +75,34 @@ public class EntityPropertiesProvider
 		if (!(PhpClassUtils.isImplementationOfInterface(functionClass, IRepositoryInterface))) {
 			return;
 		}
+		String fieldExpression = parameters.getOriginalPosition().getText();
+		String[] path = fieldExpression.split("->", -1);
 
-		for (PhpClass cls : OrmUtils.findRepositoryEntities(functionClass)) {
+		for (PhpClass cls : OrmUtils.findQueriedEntities(functionClass, path)) {
 
 			if (cls.getDocComment() == null) {
 				return;
 			}
 			for (PhpDocPropertyTag phpDocPropertyTag : cls.getDocComment().getPropertyTags()) {
 
-				Stream<String> types = phpDocPropertyTag.getType().getTypesSorted().stream().filter(s -> !s.contains("Nextras\\Orm\\Relationships") && !s.equals("?"));
+				Stream<String> types = phpDocPropertyTag.getType().getTypesSorted().stream()
+					.filter(s -> !s.contains("Nextras\\Orm\\Relationships") && !s.equals("?"))
+					.map(s -> s.startsWith("\\") ? s.substring(1) : s);
 
-				result.addElement(LookupElementBuilder.create(phpDocPropertyTag.getProperty().getText().substring(1))
+				String strPath = String.join("->", Arrays.copyOfRange(path, 0, path.length - 1));
+				if (strPath.length() > 0) {
+					strPath += "->";
+				}
+				String fieldName = phpDocPropertyTag.getProperty().getText().substring(1);
+				strPath += fieldName;
+				result.addElement(LookupElementBuilder.create(strPath)
+					.withPresentableText(fieldName)
 					.withTypeText(types.collect(Collectors.joining("|"))));
 			}
-			result.addElement(LookupElementBuilder.create("this").withTypeText(cls.getType().toString()));
-			result.addElement(LookupElementBuilder.create(cls.getFQN()).withTypeText(cls.getType().toString()));
+			if (path.length == 1) {
+				result.addElement(LookupElementBuilder.create("this").withTypeText(cls.getType().toString()));
+				result.addElement(LookupElementBuilder.create(cls.getFQN()).withTypeText(cls.getType().toString()));
+			}
 		}
 	}
 }
