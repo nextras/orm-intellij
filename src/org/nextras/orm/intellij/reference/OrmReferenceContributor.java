@@ -13,5 +13,6 @@ public class OrmReferenceContributor extends PsiReferenceContributor
 	public void registerReferenceProviders(@NotNull PsiReferenceRegistrar psiReferenceRegistrar)
 	{
 		psiReferenceRegistrar.registerReferenceProvider(PlatformPatterns.psiElement(PhpElementTypes.STRING), new SetValueReferenceProvider());
+		psiReferenceRegistrar.registerReferenceProvider(PlatformPatterns.psiElement(PhpElementTypes.STRING), new CollectionPropertyReferenceProvider());
 	}
 }
