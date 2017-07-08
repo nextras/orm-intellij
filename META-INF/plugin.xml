@@ -48,6 +48,9 @@
 		        level="WARNING"/>
 		<codeInsight.lineMarkerProvider language="PHP" implementationClass="org.nextras.orm.intellij.reference.RepositoryMapperMethodMarkerProvider"/>
 	</extensions>
+	<extensions defaultExtensionNs="com.jetbrains.php">
+		<typeProvider3 implementation="org.nextras.orm.intellij.typeProvider.PersistenceMethodsTypeProvider"/>
+	</extensions>
 
 	<actions>
 		<action id="ormGenerateSettersAction" class="org.nextras.orm.intellij.actions.generation.GenerateSettersAction"
