@@ -1,5 +1,6 @@
 package org.nextras.orm.intellij.utils;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty;
@@ -38,45 +39,56 @@ public class OrmUtils
 	}
 
 
-	public static Collection<PhpClass> findRepositoryEntities(PhpClass repositoryClass)
+	public static Collection<PhpClass> findRepositoryEntities(Collection<PhpClass> repositories)
 	{
-		Method entityNamesMethod = repositoryClass.findMethodByName("getEntityClassNames");
-		if (entityNamesMethod == null) {
-			return Collections.emptyList();
-		}
-		if (!(entityNamesMethod.getLastChild() instanceof GroupStatement)) {
-			return Collections.emptyList();
-		}
-		if (!(((GroupStatement) entityNamesMethod.getLastChild()).getFirstPsiChild() instanceof PhpReturn)) {
-			return Collections.emptyList();
-		}
-		if (!(((GroupStatement) entityNamesMethod.getLastChild()).getFirstPsiChild().getFirstPsiChild() instanceof ArrayCreationExpression)) {
-			return Collections.emptyList();
-		}
-		ArrayCreationExpression arr = (ArrayCreationExpression) ((GroupStatement) entityNamesMethod.getLastChild()).getFirstPsiChild().getFirstPsiChild();
 		final Collection<PhpClass> entities = new ArrayList<PhpClass>(1);
-		final PhpIndex phpIndex = PhpIndex.getInstance(repositoryClass.getProject());
-		for (PsiElement el : arr.getChildren()) {
-			if (!(el.getFirstChild() instanceof ClassConstantReference)) {
-				continue;
+		for (PhpClass repositoryClass : repositories) {
+
+			Method entityNamesMethod = repositoryClass.findMethodByName("getEntityClassNames");
+			if (entityNamesMethod == null) {
+				return Collections.emptyList();
 			}
-			ClassConstantReference ref = (ClassConstantReference) el.getFirstChild();
-			if (!ref.getName().equals("class")) {
-				continue;
+			if (!(entityNamesMethod.getLastChild() instanceof GroupStatement)) {
+				return Collections.emptyList();
 			}
-			entities.addAll(PhpIndexUtils.getByType(ref.getClassReference().getType(), phpIndex));
+			if (!(((GroupStatement) entityNamesMethod.getLastChild()).getFirstPsiChild() instanceof PhpReturn)) {
+				return Collections.emptyList();
+			}
+			if (!(((GroupStatement) entityNamesMethod.getLastChild()).getFirstPsiChild().getFirstPsiChild() instanceof ArrayCreationExpression)) {
+				return Collections.emptyList();
+			}
+			ArrayCreationExpression arr = (ArrayCreationExpression) ((GroupStatement) entityNamesMethod.getLastChild()).getFirstPsiChild().getFirstPsiChild();
+			final PhpIndex phpIndex = PhpIndex.getInstance(repositoryClass.getProject());
+			for (PsiElement el : arr.getChildren()) {
+				if (!(el.getFirstChild() instanceof ClassConstantReference)) {
+					continue;
+				}
+				ClassConstantReference ref = (ClassConstantReference) el.getFirstChild();
+				if (!ref.getName().equals("class")) {
+					continue;
+				}
+				entities.addAll(PhpIndexUtils.getByType(ref.getClassReference().getType(), phpIndex));
+			}
 		}
 		return entities;
 	}
 
 
-	public static Collection<PhpClass> findQueriedEntities(PhpClass repositoryClass, String[] path)
+	public static Collection<PhpClass> findQueriedEntities(Collection<PhpClass> repositories, String[] path)
 	{
-		if (path.length <= 1) {
-			return findRepositoryEntities(repositoryClass);
+		if (repositories.size() == 0) {
+			return Collections.emptyList();
 		}
-		PhpIndex index = PhpIndex.getInstance(repositoryClass.getProject());
-		Collection<PhpClass> classes = path[0].equals("this") ? findRepositoryEntities(repositoryClass) : PhpIndexUtils.getByType(new PhpType().add(path[0]), index);
+		if (path.length <= 1) {
+			return findRepositoryEntities(repositories);
+		}
+		Project project = null;
+		for (PhpClass cls : repositories) {
+			project = cls.getProject();
+			break;
+		}
+		PhpIndex index = PhpIndex.getInstance(project);
+		Collection<PhpClass> classes = path[0].equals("this") ? findRepositoryEntities(repositories) : PhpIndexUtils.getByType(new PhpType().add(path[0]), index);
 		return findTargetEntities(classes, path, 1);
 	}
 

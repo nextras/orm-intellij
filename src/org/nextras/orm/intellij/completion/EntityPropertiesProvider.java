@@ -13,8 +13,10 @@ import org.bouncycastle.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.nextras.orm.intellij.utils.OrmUtils;
 import org.nextras.orm.intellij.utils.PhpClassUtils;
+import org.nextras.orm.intellij.utils.PhpIndexUtils;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -57,28 +59,13 @@ public class EntityPropertiesProvider
 		if (classReference == null) {
 			return;
 		}
+		Collection<PhpClass> repositories = PhpIndexUtils.getByType(classReference.getType(), phpIndex)
+			.stream().filter(cls -> OrmUtils.isRepository(cls, phpIndex)).collect(Collectors.toList());
 
-		PhpClass functionClass = null;
-		for (String fqn : classReference.getType().getTypes()) {
-			for (PhpClass cls : phpIndex.getClassesByFQN(fqn)) {
-				functionClass = cls;
-				break;
-			}
-		}
-		if (functionClass == null) {
-			return;
-		}
-
-		//PhpClass ICollectionInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Collection\\ICollection");
-		PhpClass IRepositoryInterface = PhpClassUtils.getInterface(phpIndex, "\\Nextras\\Orm\\Repository\\IRepository");
-
-		if (!(PhpClassUtils.isImplementationOfInterface(functionClass, IRepositoryInterface))) {
-			return;
-		}
 		String fieldExpression = parameters.getOriginalPosition().getText();
 		String[] path = fieldExpression.split("->", -1);
 
-		for (PhpClass cls : OrmUtils.findQueriedEntities(functionClass, path)) {
+		for (PhpClass cls : OrmUtils.findQueriedEntities(repositories, path)) {
 
 			if (cls.getDocComment() == null) {
 				return;
