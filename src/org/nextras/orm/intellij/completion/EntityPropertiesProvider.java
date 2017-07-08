@@ -45,7 +45,7 @@ public class EntityPropertiesProvider
 			return;
 		}
 		Method method = (Method) methodEl;
-		if (!(method.getName().equals("findBy") || method.getName().equals("getBy"))) {
+		if (!(method.getName().equals("findBy") || method.getName().equals("getBy") || method.getName().equals("orderBy"))) {
 			return;
 		}
 
@@ -55,17 +55,27 @@ public class EntityPropertiesProvider
 		}
 		PhpIndex phpIndex = PhpIndex.getInstance(project);
 
+
 		PhpExpression classReference = methodReference.getClassReference();
 		if (classReference == null) {
 			return;
 		}
-		Collection<PhpClass> repositories = PhpIndexUtils.getByType(classReference.getType(), phpIndex)
-			.stream().filter(cls -> OrmUtils.isRepository(cls, phpIndex)).collect(Collectors.toList());
+		Collection<PhpClass> classes = PhpIndexUtils.getByType(classReference.getType(), phpIndex);
+		while(classes.stream().filter(cls -> OrmUtils.isCollection(cls, phpIndex)).count() > 0) {
+			if (!(classReference instanceof MemberReference))	{
+				return;
+			}
+			classReference = ((MemberReference) classReference).getClassReference();
+			classes = PhpIndexUtils.getByType(classReference.getType(), phpIndex);
+		}
+
+		Collection<PhpClass> repositories = classes.stream().filter(cls -> OrmUtils.isRepository(cls, phpIndex)).collect(Collectors.toList());
 
 		String fieldExpression = parameters.getOriginalPosition().getText();
 		String[] path = fieldExpression.split("->", -1);
 
-		for (PhpClass cls : OrmUtils.findQueriedEntities(repositories, path)) {
+		Collection<PhpClass> queriedEntities = OrmUtils.findQueriedEntities(repositories, path);
+		for (PhpClass cls : queriedEntities) {
 
 			if (cls.getDocComment() == null) {
 				return;
