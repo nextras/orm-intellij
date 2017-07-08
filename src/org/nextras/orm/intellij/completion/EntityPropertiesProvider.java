@@ -8,6 +8,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.tags.PhpDocPropertyTag;
+import com.jetbrains.php.lang.parser.PhpElementTypes;
 import com.jetbrains.php.lang.psi.elements.*;
 import org.bouncycastle.util.Strings;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,11 @@ public class EntityPropertiesProvider
 
 		ParameterList parameterList = PsiTreeUtil.getParentOfType(element, ParameterList.class);
 		if (parameterList == null) {
+			return;
+		}
+		if (element.getParent() instanceof PhpPsiElement
+			&& ((PhpPsiElement) element.getParent()).getPrevPsiSibling() != null
+			&& ((PhpPsiElement) element.getParent()).getPrevPsiSibling().getNode().getElementType() == PhpElementTypes.ARRAY_KEY) {
 			return;
 		}
 		PsiElement context = parameterList.getContext();
