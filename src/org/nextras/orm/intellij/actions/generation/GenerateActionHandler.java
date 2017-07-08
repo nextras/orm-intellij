@@ -27,7 +27,6 @@ import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.refactoring.importReferences.PhpClassReferenceResolver;
 import org.jetbrains.annotations.NotNull;
 import org.nextras.orm.intellij.utils.OrmUtils;
-import org.nextras.orm.intellij.utils.PhpClassUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,7 +48,7 @@ public abstract class GenerateActionHandler implements CodeInsightActionHandler
 
 		PhpIndex phpIndex = PhpIndex.getInstance(project);
 
-		return OrmUtils.isEntity(phpClass, phpIndex);
+		return OrmUtils.OrmClass.ENTITY.is(phpClass, phpIndex);
 	}
 
 

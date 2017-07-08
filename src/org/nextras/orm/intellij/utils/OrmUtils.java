@@ -14,36 +14,31 @@ import java.util.stream.Collectors;
 
 public class OrmUtils
 {
-	public static final String COLLECTION_CLASS = "\\Nextras\\Orm\\Collection\\ICollection";
-	public static final String MAPPER_CLASS = "\\Nextras\\Orm\\Mapper\\IMapper";
-	public static final String REPOSITORY_CLASS = "\\Nextras\\Orm\\Repository\\IRepository";
-	public static final String ENTITY_CLASS = "\\Nextras\\Orm\\Entity\\IEntity";
-
-	public static boolean isEntity(PhpClass cls, PhpIndex phpIndex)
+	public enum OrmClass
 	{
-		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, ENTITY_CLASS);
-		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
-	}
+		COLLECTION("\\Nextras\\Orm\\Collection\\ICollection"),
+		MAPPER("\\Nextras\\Orm\\Mapper\\IMapper"),
+		REPOSITORY("\\Nextras\\Orm\\Repository\\IRepository"),
+		ENTITY("\\Nextras\\Orm\\Entity\\IEntity"),
+		HAS_MANY("\\Nextras\\Orm\\Relationships\\HasMany");
 
+		private String name;
 
-	public static boolean isRepository(PhpClass cls, PhpIndex phpIndex)
-	{
-		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, REPOSITORY_CLASS);
-		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
-	}
+		OrmClass(String name)
+		{
+			this.name = name;
+		}
 
+		public boolean is(PhpClass cls, PhpIndex index)
+		{
+			Collection<PhpClass> classes = index.getAnyByFQN(name);
+			PhpClass instanceOf = classes.isEmpty() ? null : classes.iterator().next();
+			if (instanceOf == null) {
+				return false;
+			}
+			return instanceOf.getType().isConvertibleFrom(cls.getType(), index);
+		}
 
-	public static boolean isMapper(PhpClass cls, PhpIndex phpIndex)
-	{
-		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, MAPPER_CLASS);
-		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
-	}
-
-
-	public static boolean isCollection(PhpClass cls, PhpIndex phpIndex)
-	{
-		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, COLLECTION_CLASS);
-		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
 	}
 
 
@@ -92,12 +87,12 @@ public class OrmUtils
 		PhpIndex phpIndex = PhpIndex.getInstance(ref.getProject());
 		Collection<PhpClass> classes = PhpIndexUtils.getByType(classReference.getType(), phpIndex);
 		Collection<PhpClass> repositories = classes.stream()
-			.filter(cls -> OrmUtils.isRepository(cls, phpIndex))
+			.filter(cls -> OrmClass.REPOSITORY.is(cls, phpIndex))
 			.collect(Collectors.toList());
 		if (repositories.size() > 0) {
 			entities.addAll(findRepositoryEntities(repositories));
 		}
-		entities.addAll(classes.stream().filter(cls -> OrmUtils.isEntity(cls, phpIndex)).collect(Collectors.toList()));
+		entities.addAll(classes.stream().filter(cls -> OrmClass.ENTITY.is(cls, phpIndex)).collect(Collectors.toList()));
 		return entities;
 	}
 
@@ -153,7 +148,7 @@ public class OrmUtils
 				type = type.substring(0, type.length() - 2);
 			}
 			for (PhpClass entityCls : PhpIndexUtils.getByType(new PhpType().add(type), index)) {
-				if (!OrmUtils.isEntity(entityCls, index)) {
+				if (!OrmClass.ENTITY.is(entityCls, index)) {
 					continue;
 				}
 				entities.add(entityCls);

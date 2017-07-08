@@ -67,12 +67,12 @@ public class CollectionTypeProvider implements PhpTypeProvider3
 		PhpIndex index = PhpIndex.getInstance(project);
 		Collection<PhpClass> types = PhpIndexUtils.getByType(new PhpType().add(refSig), index, visited, depth);
 
-		Stream<PhpClass> repoClasses = types.stream().filter(cls -> OrmUtils.isRepository(cls, index));
+		Stream<PhpClass> repoClasses = types.stream().filter(cls -> OrmUtils.OrmClass.REPOSITORY.is(cls, index));
 		List<PhpClass> repoClassesList = repoClasses.collect(Collectors.toList());
 		if (repoClassesList.size() > 0) {
 			result.addAll(OrmUtils.findRepositoryEntities(repoClassesList));
 		}
-		result.addAll(types.stream().filter(cls -> OrmUtils.isEntity(cls, index)).collect(Collectors.toList()));
+		result.addAll(types.stream().filter(cls -> OrmUtils.OrmClass.ENTITY.is(cls, index)).collect(Collectors.toList()));
 
 
 		return result;

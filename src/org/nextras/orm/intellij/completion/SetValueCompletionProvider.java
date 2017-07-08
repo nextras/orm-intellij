@@ -39,7 +39,7 @@ public class SetValueCompletionProvider extends CompletionProvider<CompletionPar
 		}
 		PhpIndex phpIndex = PhpIndex.getInstance(el.getProject());
 		for (PhpClass cls : PhpIndexUtils.getByType(methodReference.getClassReference().getType(), phpIndex)) {
-			if (!OrmUtils.isEntity(cls, phpIndex)) {
+			if (!OrmUtils.OrmClass.ENTITY.is(cls, phpIndex)) {
 				continue;
 			}
 			for (Field field : cls.getFields()) {

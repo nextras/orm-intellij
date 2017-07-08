@@ -2,10 +2,8 @@ package org.nextras.orm.intellij.reference;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiPolyVariantReferenceBase;
-import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.jetbrains.php.PhpIndex;
-import com.jetbrains.php.PhpIndexImpl;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty;
 import com.jetbrains.php.lang.psi.elements.Field;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
@@ -14,7 +12,6 @@ import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.nextras.orm.intellij.utils.OrmUtils;
-import org.nextras.orm.intellij.utils.PhpClassUtils;
 import org.nextras.orm.intellij.utils.PhpIndexUtils;
 
 import java.util.ArrayList;
@@ -40,7 +37,7 @@ public class EntityPropertyReference extends PsiPolyVariantReferenceBase<StringL
 		ArrayList<ResolveResult> result = new ArrayList<ResolveResult>();
 		PhpIndex phpIndex = PhpIndex.getInstance(this.getElement().getProject());
 		for (PhpClass cls : PhpIndexUtils.getByType(method.getClassReference().getType(), phpIndex)) {
-			if (!OrmUtils.isEntity(cls, phpIndex)) {
+			if (!OrmUtils.OrmClass.ENTITY.is(cls, phpIndex)) {
 				continue;
 			}
 			final Field field = cls.findFieldByName(expr.getContents(), false);

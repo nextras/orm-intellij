@@ -40,7 +40,7 @@ public class RepositoryMapperMethodMarkerProvider extends RelatedItemLineMarkerP
 		PhpDocMethod method = (PhpDocMethod) element;
 		PhpClass containingClass = method.getContainingClass();
 		PhpIndex index = PhpIndex.getInstance(method.getProject());
-		if (!OrmUtils.isRepository(containingClass, index)) {
+		if (!OrmUtils.OrmClass.REPOSITORY.is(containingClass, index)) {
 			return;
 		}
 		if (baseMethods.contains(method.getName())) {
@@ -53,7 +53,7 @@ public class RepositoryMapperMethodMarkerProvider extends RelatedItemLineMarkerP
 		PhpIndex phpIndex = PhpIndex.getInstance(element.getProject());
 		Collection<Method> methods = new ArrayList<Method>();
 		for (PhpClass cls : phpIndex.getClassesByFQN(mapperClass)) {
-			if (!OrmUtils.isMapper(cls, phpIndex)) {
+			if (!OrmUtils.OrmClass.MAPPER.is(cls, phpIndex)) {
 				continue;
 			}
 			final Method mapperMethod = cls.findMethodByName(method.getName());

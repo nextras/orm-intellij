@@ -31,7 +31,7 @@ public class SetReadOnlyValueCompletionProvider extends CompletionProvider<Compl
 		}
 
 		PhpIndex phpIndex = PhpIndex.getInstance(el.getProject());
-		if (!OrmUtils.isEntity(cls, phpIndex)) {
+		if (!OrmUtils.OrmClass.ENTITY.is(cls, phpIndex)) {
 			return;
 		}
 		for (Field field : cls.getFields()) {
