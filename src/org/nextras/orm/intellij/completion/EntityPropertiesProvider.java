@@ -85,6 +85,8 @@ public class EntityPropertiesProvider
 				result.addElement(LookupElementBuilder.create(phpDocPropertyTag.getProperty().getText().substring(1))
 					.withTypeText(types.collect(Collectors.joining("|"))));
 			}
+			result.addElement(LookupElementBuilder.create("this").withTypeText(cls.getType().toString()));
+			result.addElement(LookupElementBuilder.create(cls.getFQN()).withTypeText(cls.getType().toString()));
 		}
 	}
 }
