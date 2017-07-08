@@ -1,24 +1,19 @@
 package org.nextras.orm.intellij.utils;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty;
 import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
 public class OrmUtils
 {
-	private static final Pattern entityPattern = Pattern.compile("(?:@entity\\s+([a-zA-Z0-9_\\\\]+))");
-
 	public static final String COLLECTION_CLASS = "\\Nextras\\Orm\\Collection\\ICollection";
 	public static final String MAPPER_CLASS = "\\Nextras\\Orm\\Mapper\\IMapper";
 	public static final String REPOSITORY_CLASS = "\\Nextras\\Orm\\Repository\\IRepository";
@@ -49,26 +44,6 @@ public class OrmUtils
 	{
 		PhpClass entityInterface = PhpClassUtils.getInterface(phpIndex, COLLECTION_CLASS);
 		return PhpClassUtils.isImplementationOfInterface(cls, entityInterface);
-	}
-
-
-	public static Collection<PhpClass> findQueriedRepositories(MemberReference ref)
-	{
-		PhpExpression classReference = ref.getClassReference();
-		if (classReference == null) {
-			return Collections.emptyList();
-		}
-		PhpIndex phpIndex = PhpIndex.getInstance(ref.getProject());
-		Collection<PhpClass> classes = PhpIndexUtils.getByType(classReference.getType(), phpIndex);
-		while(classes.stream().filter(cls -> OrmUtils.isCollection(cls, phpIndex)).count() > 0) {
-			if (!(classReference instanceof MemberReference))	{
-				return Collections.emptyList();
-			}
-			classReference = ((MemberReference) classReference).getClassReference();
-			classes = PhpIndexUtils.getByType(classReference.getType(), phpIndex);
-		}
-
-		return classes.stream().filter(cls -> OrmUtils.isRepository(cls, phpIndex)).collect(Collectors.toList());
 	}
 
 
@@ -107,22 +82,46 @@ public class OrmUtils
 	}
 
 
-	public static Collection<PhpClass> findQueriedEntities(Collection<PhpClass> repositories, String[] path)
+	public static Collection<PhpClass> findQueriedEntities(MemberReference ref)
 	{
-		if (repositories.size() == 0) {
+		PhpExpression classReference = ref.getClassReference();
+		if (classReference == null) {
+			return Collections.emptyList();
+		}
+		Collection<PhpClass> entities = new HashSet<>();
+		PhpIndex phpIndex = PhpIndex.getInstance(ref.getProject());
+		Collection<PhpClass> classes = PhpIndexUtils.getByType(classReference.getType(), phpIndex);
+		Collection<PhpClass> repositories = classes.stream()
+			.filter(cls -> OrmUtils.isRepository(cls, phpIndex))
+			.collect(Collectors.toList());
+		if (repositories.size() > 0) {
+			entities.addAll(findRepositoryEntities(repositories));
+		}
+		entities.addAll(classes.stream().filter(cls -> OrmUtils.isEntity(cls, phpIndex)).collect(Collectors.toList()));
+		return entities;
+	}
+
+
+	public static Collection<PhpClass> findQueriedEntities(MethodReference reference, String[] path)
+	{
+		if (path.length == 0) {
+			return Collections.emptyList();
+		}
+		Collection<PhpClass> rootEntities;
+		if (path.length == 1 || path[0].equals("this")) {
+			rootEntities = findQueriedEntities(reference);
+		} else {
+			PhpIndex index = PhpIndex.getInstance(reference.getProject());
+			rootEntities = PhpIndexUtils.getByType(new PhpType().add(path[0]), index);
+
+		}
+		if (rootEntities.size() == 0) {
 			return Collections.emptyList();
 		}
 		if (path.length <= 1) {
-			return findRepositoryEntities(repositories);
+			return rootEntities;
 		}
-		Project project = null;
-		for (PhpClass cls : repositories) {
-			project = cls.getProject();
-			break;
-		}
-		PhpIndex index = PhpIndex.getInstance(project);
-		Collection<PhpClass> classes = path[0].equals("this") ? findRepositoryEntities(repositories) : PhpIndexUtils.getByType(new PhpType().add(path[0]), index);
-		return findTargetEntities(classes, path, 1);
+		return findTargetEntities(rootEntities, path, 1);
 	}
 
 

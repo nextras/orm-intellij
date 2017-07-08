@@ -4,17 +4,14 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiPolyVariantReferenceBase;
 import com.intellij.psi.ResolveResult;
-import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty;
 import com.jetbrains.php.lang.psi.elements.Field;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
-import com.jetbrains.php.lang.psi.resolve.types.PhpType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.nextras.orm.intellij.utils.OrmUtils;
-import org.nextras.orm.intellij.utils.PhpIndexUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,38 +30,25 @@ public class CollectionPropertyReference extends PsiPolyVariantReferenceBase<Str
 	{
 		super(element);
 		this.methodReference = methodReference;
-		this.parts = parts;
+		this.parts = Arrays.copyOfRange(parts, 0, pos + 1);
 		this.pos = pos;
-		int start = String.join("->", Arrays.copyOfRange(parts, 0, pos)).length() + (pos == 0 ? 1 : 3);
-		setRangeInElement(new TextRange(start, start + parts[pos].length()));
+		int end = String.join("->", this.parts).length() + 1;
+		setRangeInElement(new TextRange(end - parts[pos].length(), end));
 	}
+
 
 	@NotNull
 	@Override
 	public ResolveResult[] multiResolve(boolean b)
 	{
-		Collection<PhpClass> classes;
-		PhpIndex index = PhpIndex.getInstance(getElement().getProject());
-		if (pos == 0 || parts[0].equals("this")) {
-			Collection<PhpClass> repositories = OrmUtils.findQueriedRepositories(methodReference);
-			classes = OrmUtils.findRepositoryEntities(repositories);
-		} else {
-			classes = PhpIndexUtils.getByType(new PhpType().add(parts[0]), index);
-		}
+		Collection<PhpClass> classes = OrmUtils.findQueriedEntities(methodReference, this.parts);
 		Collection<Field> fields = new HashSet<>();
-		for (int i = pos == 0 ? 0 : 1; i <= pos; i++) {
-			Collection<PhpClass> newClasses = new HashSet<>();
-			for (PhpClass cls : classes) {
-				Field field = cls.findFieldByName(parts[i], false);
-				if (field == null || !(field instanceof PhpDocProperty)) {
-					continue;
-				}
-				OrmUtils.addEntitiesFromField(newClasses, (PhpDocProperty) field);
-				if (i == pos) {
-					fields.add(field);
-				}
+		for (PhpClass cls : classes) {
+			Field field = cls.findFieldByName(parts[pos], false);
+			if (field == null || !(field instanceof PhpDocProperty)) {
+				continue;
 			}
-			classes = newClasses;
+			fields.add(field);
 		}
 		ResolveResult[] result = new ResolveResult[fields.size()];
 		int i = 0;

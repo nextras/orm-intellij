@@ -6,22 +6,14 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.documentation.phpdoc.psi.tags.PhpDocPropertyTag;
 import com.jetbrains.php.lang.parser.PhpElementTypes;
 import com.jetbrains.php.lang.psi.elements.*;
-import org.bouncycastle.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.nextras.orm.intellij.utils.OrmUtils;
-import org.nextras.orm.intellij.utils.PhpClassUtils;
-import org.nextras.orm.intellij.utils.PhpIndexUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,8 +56,7 @@ public class EntityPropertiesProvider
 		String fieldExpression = parameters.getOriginalPosition().getText();
 		String[] path = fieldExpression.split("->", -1);
 
-		Collection<PhpClass> repositories = OrmUtils.findQueriedRepositories(methodReference);
-		Collection<PhpClass> queriedEntities = OrmUtils.findQueriedEntities(repositories, path);
+		Collection<PhpClass> queriedEntities = OrmUtils.findQueriedEntities(methodReference, path);
 		for (PhpClass cls : queriedEntities) {
 
 			if (cls.getDocComment() == null) {
@@ -77,10 +68,6 @@ public class EntityPropertiesProvider
 					.filter(s -> !s.contains("Nextras\\Orm\\Relationships") && !s.equals("?"))
 					.map(s -> s.startsWith("\\") ? s.substring(1) : s);
 
-				String strPath = String.join("->", Arrays.copyOfRange(path, 0, path.length - 1));
-				if (strPath.length() > 0) {
-					strPath += "->";
-				}
 				String fieldName = phpDocPropertyTag.getProperty().getText().substring(1);
 				result.addElement(LookupElementBuilder.create(fieldName)
 					.withPresentableText(fieldName)

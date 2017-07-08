@@ -26,7 +26,7 @@ public class CollectionPropertyReferenceProvider extends PsiReferenceProvider
 		}
 		String content = ((StringLiteralExpression) psiElement).getContents().replaceAll("[=<>!]", "");
 
-		String[] parts = content.split("-");
+		String[] parts = content.split("-", -1);
 		if (parts.length == 0) {
 			return new PsiReference[0];
 		}
@@ -77,7 +77,9 @@ public class CollectionPropertyReferenceProvider extends PsiReferenceProvider
 			result.add(new CollectionClassReference(el, ref, parts[0]));
 		}
 		for (int i = parts.length == 1 ? 0 : 1; i < parts.length; i++) {
-			result.add(new CollectionPropertyReference(el, ref, parts, i));
+			if (!parts[i].equals("")) {
+				result.add(new CollectionPropertyReference(el, ref, parts, i));
+			}
 		}
 
 		return result;
