@@ -69,7 +69,7 @@ public class EntityPropertiesProvider
 		for (PhpClass cls : queriedEntities) {
 
 			if (cls.getDocComment() == null) {
-				return;
+				continue;
 			}
 			for (PhpDocPropertyTag phpDocPropertyTag : cls.getDocComment().getPropertyTags()) {
 
