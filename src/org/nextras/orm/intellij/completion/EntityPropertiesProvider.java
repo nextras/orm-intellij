@@ -67,20 +67,14 @@ public class EntityPropertiesProvider
 			return;
 		}
 
-		String entityClassName = OrmUtils.findRepositoryEntities(functionClass);
-		if (entityClassName == null) {
-			return;
-		}
-		PhpClass entityClass = null;
-		for (PhpClass cls : phpIndex.getClassesByFQN(entityClassName)) {
-			entityClass = cls;
-			break;
-		}
-		if (entityClass == null || entityClass.getDocComment() == null) {
-			return;
-		}
-		for (PhpDocPropertyTag phpDocPropertyTag : entityClass.getDocComment().getPropertyTags()) {
-			result.addElement(LookupElementBuilder.create(phpDocPropertyTag.getProperty().getText().substring(1)));
+		for (PhpClass cls : OrmUtils.findRepositoryEntities(functionClass)) {
+
+			if (cls.getDocComment() == null) {
+				return;
+			}
+			for (PhpDocPropertyTag phpDocPropertyTag : cls.getDocComment().getPropertyTags()) {
+				result.addElement(LookupElementBuilder.create(phpDocPropertyTag.getProperty().getText().substring(1)));
+			}
 		}
 	}
 }

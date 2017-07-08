@@ -1,8 +1,14 @@
 package org.nextras.orm.intellij.utils;
 
+import com.intellij.psi.PsiElement;
 import com.jetbrains.php.PhpIndex;
-import com.jetbrains.php.lang.psi.elements.PhpClass;
+import com.jetbrains.php.lang.psi.elements.*;
+import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor;
+import com.jetbrains.php.lang.psi.visitors.PhpRecursiveElementVisitor;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,19 +38,34 @@ public class OrmUtils
 	}
 
 
-	public static String findRepositoryEntities(PhpClass repositoryClass)
+	public static Collection<PhpClass> findRepositoryEntities(PhpClass repositoryClass)
 	{
-		if (repositoryClass.getDocComment() == null) {
-			return null;
+		Method entityNamesMethod = repositoryClass.findMethodByName("getEntityClassNames");
+		if (entityNamesMethod == null) {
+			return Collections.emptyList();
 		}
-
-		String phpDoc = repositoryClass.getDocComment().getText();
-		Matcher matcher = entityPattern.matcher(phpDoc);
-		while (matcher.find()) {
-			String entityClass = matcher.group(1);
-			return entityClass;
+		if (!(entityNamesMethod.getLastChild() instanceof GroupStatement)) {
+			return Collections.emptyList();
 		}
-
-		return null;
+		if (!(((GroupStatement) entityNamesMethod.getLastChild()).getFirstPsiChild() instanceof PhpReturn)) {
+			return Collections.emptyList();
+		}
+		if (!(((GroupStatement) entityNamesMethod.getLastChild()).getFirstPsiChild().getFirstPsiChild() instanceof ArrayCreationExpression)) {
+			return Collections.emptyList();
+		}
+		ArrayCreationExpression arr = (ArrayCreationExpression) ((GroupStatement) entityNamesMethod.getLastChild()).getFirstPsiChild().getFirstPsiChild();
+		final Collection<PhpClass> entities = new ArrayList<PhpClass>(1);
+		final PhpIndex phpIndex = PhpIndex.getInstance(repositoryClass.getProject());
+		for (PsiElement el : arr.getChildren()) {
+			if (!(el.getFirstChild() instanceof ClassConstantReference)) {
+				continue;
+			}
+			ClassConstantReference ref = (ClassConstantReference) el.getFirstChild();
+			if (!ref.getName().equals("class")) {
+				continue;
+			}
+			entities.addAll(PhpIndexUtils.getByType(ref.getClassReference().getType(), phpIndex));
+		}
+		return entities;
 	}
 }
