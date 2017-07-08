@@ -8,6 +8,7 @@ import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider3;
+import com.jetbrains.php.lang.psi.resolve.types.PhpTypeSignatureKey;
 import org.jetbrains.annotations.Nullable;
 import org.nextras.orm.intellij.utils.OrmUtils;
 import org.nextras.orm.intellij.utils.PhpIndexUtils;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 public class CollectionTypeProvider implements PhpTypeProvider3
 {
 
-	private static Set<String> pluralMethods = new HashSet<>(Arrays.asList("findBy", "orderBy", "limitBy", "fetchAll", "findAll", "findById"));
+	private static Set<String> pluralMethods = new HashSet<>(Arrays.asList("findBy", "orderBy", "limitBy", "fetchAll", "findAll", "findById", "get"));
 	private static Set<String> singularMethods = new HashSet<>(Arrays.asList("fetch", "getBy", "getById"));
 
 
@@ -64,16 +65,24 @@ public class CollectionTypeProvider implements PhpTypeProvider3
 		if (refSig.endsWith("[]")) {
 			refSig = refSig.substring(0, refSig.length() - 2);
 		}
+		String methodName = expression.substring(pos + 1);
+		if (methodName.endsWith("[]")) {
+			methodName = methodName.substring(0, methodName.length() - 2);
+		}
 		PhpIndex index = PhpIndex.getInstance(project);
 		Collection<PhpClass> types = PhpIndexUtils.getByType(new PhpType().add(refSig), index, visited, depth);
 
-		Stream<PhpClass> repoClasses = types.stream().filter(cls -> OrmUtils.OrmClass.REPOSITORY.is(cls, index));
-		List<PhpClass> repoClassesList = repoClasses.collect(Collectors.toList());
-		if (repoClassesList.size() > 0) {
-			result.addAll(OrmUtils.findRepositoryEntities(repoClassesList));
+		if (types.stream().anyMatch(cls -> OrmUtils.OrmClass.HAS_MANY.is(cls, index)) && methodName.equals("get")) {
+			result.addAll(PhpIndexUtils.getByType(new PhpType().add(PhpTypeSignatureKey.ARRAY_ELEMENT.sign(refSig)), index, visited, depth));
+		} else {
+			result.addAll(types.stream().filter(cls -> OrmUtils.OrmClass.ENTITY.is(cls, index)).collect(Collectors.toList()));
+			Stream<PhpClass> repoClasses = types.stream().filter(cls -> OrmUtils.OrmClass.REPOSITORY.is(cls, index));
+			List<PhpClass> repoClassesList = repoClasses.collect(Collectors.toList());
+			if (repoClassesList.size() > 0) {
+				result.addAll(OrmUtils.findRepositoryEntities(repoClassesList));
+				result.addAll(types.stream().filter(cls -> OrmUtils.OrmClass.ENTITY.is(cls, index)).collect(Collectors.toList()));
+			}
 		}
-		result.addAll(types.stream().filter(cls -> OrmUtils.OrmClass.ENTITY.is(cls, index)).collect(Collectors.toList()));
-
 
 		return result;
 	}
