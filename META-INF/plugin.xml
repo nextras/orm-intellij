@@ -46,7 +46,7 @@
 		        displayName="Read only property check"
 		        groupName="Nextras"
 		        level="WARNING"/>
-		<codeInsight.lineMarkerProvider language="PHP" implementationClass="org.nextras.orm.intellij.reference.RepositoryMapperMethodMarkerProvider"/>
+		<codeInsight.lineMarkerProvider language="PHP" implementationClass="org.nextras.orm.intellij.marker.RepositoryMapperMethodMarkerProvider"/>
 	</extensions>
 	<extensions defaultExtensionNs="com.jetbrains.php">
 		<typeProvider3 implementation="org.nextras.orm.intellij.typeProvider.PersistenceMethodsTypeProvider"/>

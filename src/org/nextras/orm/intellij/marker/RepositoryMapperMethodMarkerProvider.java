@@ -1,4 +1,4 @@
-package org.nextras.orm.intellij.reference;
+package org.nextras.orm.intellij.marker;
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
