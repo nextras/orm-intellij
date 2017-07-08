@@ -13,6 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import org.nextras.orm.intellij.utils.OrmUtils;
 import org.nextras.orm.intellij.utils.PhpClassUtils;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 public class EntityPropertiesProvider
 {
@@ -73,7 +79,11 @@ public class EntityPropertiesProvider
 				return;
 			}
 			for (PhpDocPropertyTag phpDocPropertyTag : cls.getDocComment().getPropertyTags()) {
-				result.addElement(LookupElementBuilder.create(phpDocPropertyTag.getProperty().getText().substring(1)));
+
+				Stream<String> types = phpDocPropertyTag.getType().getTypesSorted().stream().filter(s -> !s.contains("Nextras\\Orm\\Relationships") && !s.equals("?"));
+
+				result.addElement(LookupElementBuilder.create(phpDocPropertyTag.getProperty().getText().substring(1))
+					.withTypeText(types.collect(Collectors.joining("|"))));
 			}
 		}
 	}
