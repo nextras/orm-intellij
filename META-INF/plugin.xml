@@ -49,6 +49,7 @@
 		<annotator language="PHP" implementationClass="org.nextras.orm.intellij.annotator.ModifierHighlighterAnnotator"/>
 		<colorSettingsPage implementation="org.nextras.orm.intellij.annotator.highlighter.ModifierHighlighterSettings"/>
 		<psi.referenceContributor language="PHP" implementation="org.nextras.orm.intellij.reference.OrmReferenceContributor"/>
+		<referencesSearch implementation="org.nextras.orm.intellij.reference.ReferenceSearcher"/>
 		<localInspection language="PHP"
 		        implementationClass="org.nextras.orm.intellij.inspection.ReadOnlyPropertyInspection"
 		        shortName="NextrasOrmReadOnlyProperty" id="NextrasOrmReadOnlyProperty"
