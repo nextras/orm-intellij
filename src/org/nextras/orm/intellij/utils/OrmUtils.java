@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 public class OrmUtils
@@ -51,9 +52,29 @@ public class OrmUtils
 	}
 
 
+	public static Collection<PhpClass> findQueriedRepositories(MemberReference ref)
+	{
+		PhpExpression classReference = ref.getClassReference();
+		if (classReference == null) {
+			return Collections.emptyList();
+		}
+		PhpIndex phpIndex = PhpIndex.getInstance(ref.getProject());
+		Collection<PhpClass> classes = PhpIndexUtils.getByType(classReference.getType(), phpIndex);
+		while(classes.stream().filter(cls -> OrmUtils.isCollection(cls, phpIndex)).count() > 0) {
+			if (!(classReference instanceof MemberReference))	{
+				return Collections.emptyList();
+			}
+			classReference = ((MemberReference) classReference).getClassReference();
+			classes = PhpIndexUtils.getByType(classReference.getType(), phpIndex);
+		}
+
+		return classes.stream().filter(cls -> OrmUtils.isRepository(cls, phpIndex)).collect(Collectors.toList());
+	}
+
+
 	public static Collection<PhpClass> findRepositoryEntities(Collection<PhpClass> repositories)
 	{
-		final Collection<PhpClass> entities = new ArrayList<PhpClass>(1);
+		final Collection<PhpClass> entities = new HashSet<>(1);
 		for (PhpClass repositoryClass : repositories) {
 
 			Method entityNamesMethod = repositoryClass.findMethodByName("getEntityClassNames");
@@ -116,23 +137,29 @@ public class OrmUtils
 			if (!(field instanceof PhpDocProperty)) {
 				continue;
 			}
-			PhpIndex index = PhpIndex.getInstance(field.getProject());
-			for (String type : field.getType().getTypes()) {
-				if (type.contains("Nextras\\Orm\\Relationship")) {
-					continue;
-				}
-				if (type.endsWith("[]")) {
-					type = type.substring(0, type.length() - 2);
-				}
-				for (PhpClass entityCls : PhpIndexUtils.getByType(new PhpType().add(type), index)) {
-					if (!OrmUtils.isEntity(entityCls, index)) {
-						continue;
-					}
-					entities.add(entityCls);
-				}
-			}
+			addEntitiesFromField(entities, (PhpDocProperty) field);
 		}
 		return findTargetEntities(entities, path, pos + 1);
+	}
+
+
+	public static void addEntitiesFromField(Collection<PhpClass> entities, PhpDocProperty field)
+	{
+		PhpIndex index = PhpIndex.getInstance(field.getProject());
+		for (String type : field.getType().getTypes()) {
+			if (type.contains("Nextras\\Orm\\Relationship")) {
+				continue;
+			}
+			if (type.endsWith("[]")) {
+				type = type.substring(0, type.length() - 2);
+			}
+			for (PhpClass entityCls : PhpIndexUtils.getByType(new PhpType().add(type), index)) {
+				if (!OrmUtils.isEntity(entityCls, index)) {
+					continue;
+				}
+				entities.add(entityCls);
+			}
+		}
 	}
 
 }

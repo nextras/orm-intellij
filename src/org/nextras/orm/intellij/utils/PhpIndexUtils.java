@@ -29,7 +29,7 @@ public class PhpIndexUtils
 
 	private static Collection<PhpClass> getByType(String[] types, PhpIndex phpIndex, Set<String> visited, @Nullable Set<String> phpIndexVisited, int phpIndexDepth)
 	{
-		Collection<PhpClass> classes = new ArrayList<PhpClass>();
+		Collection<PhpClass> classes = new HashSet<>();
 		for (String className : types) {
 			if (className.equals("?") || visited.contains(className)) {
 				//do nothing
@@ -46,7 +46,7 @@ public class PhpIndexUtils
 
 	private static Collection<PhpClass> getBySignature(String sig, PhpIndex phpIndex, Set<String> visited, @Nullable Set<String> phpIndexVisited, int phpIndexDepth)
 	{
-		Collection<PhpClass> classes = new ArrayList<PhpClass>();
+		Collection<PhpClass> classes = new HashSet<>();
 		for (PhpNamedElement el : phpIndex.getBySignature(sig)) {
 			classes.addAll(getByType(el.getType(), phpIndex, visited, phpIndexVisited, phpIndexDepth));
 		}

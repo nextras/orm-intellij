@@ -59,27 +59,12 @@ public class EntityPropertiesProvider
 		if (project == null) {
 			return;
 		}
-		PhpIndex phpIndex = PhpIndex.getInstance(project);
 
-
-		PhpExpression classReference = methodReference.getClassReference();
-		if (classReference == null) {
-			return;
-		}
-		Collection<PhpClass> classes = PhpIndexUtils.getByType(classReference.getType(), phpIndex);
-		while(classes.stream().filter(cls -> OrmUtils.isCollection(cls, phpIndex)).count() > 0) {
-			if (!(classReference instanceof MemberReference))	{
-				return;
-			}
-			classReference = ((MemberReference) classReference).getClassReference();
-			classes = PhpIndexUtils.getByType(classReference.getType(), phpIndex);
-		}
-
-		Collection<PhpClass> repositories = classes.stream().filter(cls -> OrmUtils.isRepository(cls, phpIndex)).collect(Collectors.toList());
 
 		String fieldExpression = parameters.getOriginalPosition().getText();
 		String[] path = fieldExpression.split("->", -1);
 
+		Collection<PhpClass> repositories = OrmUtils.findQueriedRepositories(methodReference);
 		Collection<PhpClass> queriedEntities = OrmUtils.findQueriedEntities(repositories, path);
 		for (PhpClass cls : queriedEntities) {
 
@@ -97,8 +82,7 @@ public class EntityPropertiesProvider
 					strPath += "->";
 				}
 				String fieldName = phpDocPropertyTag.getProperty().getText().substring(1);
-				strPath += fieldName;
-				result.addElement(LookupElementBuilder.create(strPath)
+				result.addElement(LookupElementBuilder.create(fieldName)
 					.withPresentableText(fieldName)
 					.withTypeText(types.collect(Collectors.joining("|"))));
 			}
