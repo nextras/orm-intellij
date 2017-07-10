@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CollectionPropertyReferenceProvider extends PsiReferenceProvider {
-	private static Pattern fieldExpression = Pattern.compile("^([\\w\\\\]+(?:->\\w+)*)(!|!=|<=|>=|=|>|<)?$");
+	private static Pattern fieldExpression = Pattern.compile("^([\\w\\\\]+(?:->\\w*)*)(!|!=|<=|>=|=|>|<)?$");
 
 	@NotNull
 	@Override
