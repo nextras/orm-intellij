@@ -92,7 +92,15 @@ public class OrmUtils
 		if (repositories.size() > 0) {
 			entities.addAll(findRepositoryEntities(repositories));
 		}
-		entities.addAll(classes.stream().filter(cls -> OrmClass.ENTITY.is(cls, phpIndex)).collect(Collectors.toList()));
+		for (String type : classReference.getType().getTypes()) {
+			if (!type.endsWith("[]")) {
+				continue;
+			}
+			PhpType typeWithoutArray = new PhpType().add(type.substring(0, type.length() - 2));
+			Collection<PhpClass> maybeEntities = PhpIndexUtils.getByType(typeWithoutArray, phpIndex);
+			entities.addAll(maybeEntities.stream().filter(cls -> OrmClass.ENTITY.is(cls, phpIndex)).collect(Collectors.toList()));
+		}
+
 		return entities;
 	}
 
