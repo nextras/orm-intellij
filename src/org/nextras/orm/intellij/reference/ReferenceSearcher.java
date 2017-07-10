@@ -34,9 +34,13 @@ public class ReferenceSearcher extends QueryExecutorBase<PsiReference, Reference
 				if (!(psiElement instanceof StringLiteralExpression)) {
 					return true;
 				}
+				ProcessingContext processingContext = new ProcessingContext();
+				processingContext.put("field", property.getName());
 				for (PsiReferenceProvider provider : providers) {
-					for (PsiReference reference : provider.getReferencesByElement(psiElement, new ProcessingContext())) {
-						processor.process(reference);
+					for (PsiReference reference : provider.getReferencesByElement(psiElement, processingContext)) {
+						if (reference.isReferenceTo(searchParameters.getElementToSearch())) {
+							processor.process(reference);
+						}
 					}
 				}
 
