@@ -1,6 +1,7 @@
 package org.nextras.orm.intellij.typeProvider;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.psi.PsiElement;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
@@ -10,6 +11,7 @@ import com.jetbrains.php.lang.psi.resolve.types.PhpType;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider3;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeSignatureKey;
 import org.jetbrains.annotations.Nullable;
+import org.nextras.orm.intellij.PhpIndexFix;
 import org.nextras.orm.intellij.utils.OrmUtils;
 import org.nextras.orm.intellij.utils.PhpIndexUtils;
 
@@ -43,6 +45,12 @@ public class CollectionTypeProvider implements PhpTypeProvider3
 		}
 		if (!pluralMethods.contains(ref.getName()) && !singularMethods.contains(ref.getName())) {
 			return null;
+		}
+
+		ProjectImpl project = (ProjectImpl) element.getProject();
+		PhpIndex index = PhpIndex.getInstance(project);
+		if (!(index instanceof PhpIndexFix)) {
+			project.registerComponentInstance(PhpIndex.class, new PhpIndexFix(index, project));
 		}
 		PhpType type = ref.getClassReference().getType();
 		PhpType resultType = new PhpType();
