@@ -59,6 +59,9 @@ public class CollectionTypeProvider implements PhpTypeProvider3
 	@Override
 	public Collection<? extends PhpNamedElement> getBySignature(String expression, Set<String> visited, int depth, Project project)
 	{
+		if (expression.endsWith("[]")) {
+			return Collections.emptyList();
+		}
 		Collection<PhpNamedElement> result = new HashSet<>();
 		int pos = expression.lastIndexOf(".");
 		String refSig = expression.substring(0, pos);
