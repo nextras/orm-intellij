@@ -68,8 +68,14 @@ public class EntityPropertiesProvider
 					.filter(s -> !s.contains("Nextras\\Orm\\Relationships") && !s.equals("?"))
 					.map(s -> s.startsWith("\\") ? s.substring(1) : s);
 
+				String strPath = String.join("->", Arrays.copyOfRange(path, 0, path.length - 1));
+				if (strPath.length() > 0) {
+					strPath += "->";
+				}
 				String fieldName = phpDocPropertyTag.getProperty().getText().substring(1);
-				result.addElement(LookupElementBuilder.create(fieldName)
+				strPath += fieldName;
+
+				result.addElement(LookupElementBuilder.create(strPath)
 					.withPresentableText(fieldName)
 					.withTypeText(types.collect(Collectors.joining("|"))));
 			}
