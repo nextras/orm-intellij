@@ -75,7 +75,7 @@ public class CollectionTypeProvider implements PhpTypeProvider3
 		PhpIndex index = PhpIndex.getInstance(project);
 		Collection<PhpClass> types = PhpIndexUtils.getByType(new PhpType().add(refSig), index, visited, depth);
 
-		if (types.stream().anyMatch(cls -> OrmUtils.OrmClass.HAS_MANY.is(cls, index)) && methodName.equals("get")) {
+		if (types.stream().anyMatch(cls -> OrmUtils.OrmClass.HAS_MANY.is(cls, index)) && methodName.equals("get") && refSig.startsWith("#")) {
 			result.addAll(PhpIndexUtils.getByType(new PhpType().add(PhpTypeSignatureKey.ARRAY_ELEMENT.sign(refSig)), index, visited, depth));
 		} else {
 			result.addAll(types.stream().filter(cls -> OrmUtils.OrmClass.ENTITY.is(cls, index)).collect(Collectors.toList()));
