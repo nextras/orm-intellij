@@ -1,7 +1,7 @@
-<idea-plugin version="2">
+<idea-plugin>
 	<id>org.nextras.orm.intellij</id>
 	<name>Nextras Orm Plugin</name>
-	<version>0.4.3</version>
+	<version>0.4.4</version>
 	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.org">Nextras</vendor>
 
 	<description><![CDATA[
@@ -9,13 +9,17 @@
 	]]></description>
 
 	<change-notes><![CDATA[
+		<p>0.4.4</p>
+		<ul>
+			<li>fixed compatibility with PhpStorm 2018.1 EAP 181.3494.16</li>
+		</ul>
 		<p>0.4.3</p>
 		<ul>
 			<li>fixes and optimization</li>
 		</ul>
 		<p>0.4.2</p>
 		<ul>
-		    <li>add referece searcher</li>
+		    <li>add reference searcher</li>
 		    <li>add support for HasMany::get()</li>
 		    <li>fixes, refactoring</li>
 		</ul>
@@ -48,7 +52,7 @@
 		</ul>
     ]]></change-notes>
 
-	<idea-version since-build="131"/>
+	<idea-version since-build="181.3494"/>
 
 	<depends>com.jetbrains.php</depends>
 	<depends>com.intellij.modules.platform</depends>
