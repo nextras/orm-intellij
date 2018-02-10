@@ -10,7 +10,6 @@ import java.util.*
 import java.util.regex.Pattern
 
 class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
-
 	override fun getReferencesByElement(psiElement: PsiElement, processingContext: ProcessingContext): Array<PsiReference> {
 		val ref = getMethodReference(psiElement) ?: return emptyArray()
 
@@ -20,11 +19,12 @@ class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
 			return emptyArray()
 		}
 
-		val parts = matcher.group(1).split("->".toRegex()).toTypedArray()
-		if (parts.size == 0) {
+		val parts = matcher.group(1).split("->").toTypedArray()
+		if (parts.isEmpty()) {
 			return emptyArray()
 		}
-		val result = processExpression(psiElement, ref, parts, processingContext.get("field") as String)
+
+		val result = processExpression(psiElement, ref, parts, processingContext.get("field") as String?)
 		return result.toTypedArray()
 	}
 
@@ -34,22 +34,28 @@ class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
 			&& (el.parent as PhpPsiElement).prevPsiSibling == null
 			&& el.parent.parent is ArrayCreationExpression
 			&& el.parent.parent.parent is ParameterList
-			&& el.parent.parent.parent.parent is MethodReference) {
+			&& el.parent.parent.parent.parent is MethodReference
+		) {
 			val ref = el.parent.parent.parent.parent as MethodReference
-			return if (ref.name == "findBy" || ref.name == "getBy") {
-				ref
-			} else null
+			return when {
+				ref.name == "findBy" || ref.name == "getBy" -> ref
+				else -> null
+			}
 		}
+
 		if (el.parent.node.elementType === PhpElementTypes.ARRAY_KEY
 			&& el.parent.parent is ArrayHashElement
 			&& el.parent.parent.parent is ArrayCreationExpression
 			&& el.parent.parent.parent.parent is ParameterList
-			&& el.parent.parent.parent.parent.parent is MethodReference) {
+			&& el.parent.parent.parent.parent.parent is MethodReference
+		) {
 			val ref = el.parent.parent.parent.parent.parent as MethodReference
-			return if (ref.name == "findBy" || ref.name == "getBy") {
-				ref
-			} else null
+			return when {
+				ref.name == "findBy" || ref.name == "getBy" -> ref
+				else -> null
+			}
 		}
+
 		if (el.parent is ParameterList && el.parent.parent is MethodReference) {
 			val ref = el.parent.parent as MethodReference
 			if (ref.name == "orderBy") {
@@ -61,10 +67,12 @@ class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
 	}
 
 	private fun processExpression(el: StringLiteralExpression, ref: MethodReference, parts: Array<String>, fieldName: String?): Collection<PsiReference> {
-		val result = ArrayList<PsiReference>()
+		val result = mutableListOf<PsiReference>()
+
 		if (parts.size > 1 && fieldName == null) {
 			result.add(CollectionClassReference(el, ref, parts[0]))
 		}
+
 		for (i in (if (parts.size == 1) 0 else 1) until parts.size) {
 			if (parts[i] != "" && fieldName == null || fieldName != null && fieldName == parts[i]) {
 				result.add(CollectionPropertyReference(el, ref, parts, i))

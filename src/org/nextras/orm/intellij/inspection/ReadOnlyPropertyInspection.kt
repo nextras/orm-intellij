@@ -17,7 +17,6 @@ import org.nextras.orm.intellij.utils.OrmUtils
 import org.nextras.orm.intellij.utils.PhpIndexUtils
 
 class ReadOnlyPropertyInspection : PhpInspection() {
-
 	override fun getShortName(): String {
 		return "NextrasOrmReadOnlyProperty"
 	}
@@ -28,7 +27,7 @@ class ReadOnlyPropertyInspection : PhpInspection() {
 				if (assignmentExpression.variable !is FieldReference) {
 					return
 				}
-				if (!isReadOnlyProperty((assignmentExpression.variable as FieldReference?)!!)) {
+				if (!isReadOnlyProperty(assignmentExpression.variable as FieldReference)) {
 					return
 				}
 				problemsHolder.registerProblem(assignmentExpression, "Field is read only", SetReadOnlyValueFix())
@@ -39,20 +38,13 @@ class ReadOnlyPropertyInspection : PhpInspection() {
 	private fun isReadOnlyProperty(fieldReference: FieldReference): Boolean {
 		val phpIndex = PhpIndex.getInstance(fieldReference.project)
 		val classes = PhpIndexUtils.getByType(fieldReference.classReference!!.type, phpIndex)
-		for (cls in classes) {
-			if (!OrmUtils.OrmClass.ENTITY.`is`(cls, phpIndex)) {
-				continue
-			}
-			val field = cls.findFieldByName(fieldReference.name, false)
-			if (field is PhpDocProperty && field.parent.firstChild.text == "@property-read") {
-				return true
-			}
-		}
-		return false
+		return classes
+			.filter { OrmUtils.OrmClass.ENTITY.`is`(it, phpIndex) }
+			.map { it.findFieldByName(fieldReference.name, false) }
+			.any { it is PhpDocProperty && it.parent.firstChild.text == "@property-read" }
 	}
 
 	private inner class SetReadOnlyValueFix : LocalQuickFix {
-
 		@Nls
 		override fun getFamilyName(): String {
 			return "Change to setReadOnlyValue"
@@ -60,11 +52,10 @@ class ReadOnlyPropertyInspection : PhpInspection() {
 
 		override fun applyFix(project: Project, problemDescriptor: ProblemDescriptor) {
 			val assignment = problemDescriptor.psiElement as AssignmentExpression
-			val fieldReference = assignment.variable as FieldReference?
-
-			val ref = PhpPsiElementFactory.createMethodReference(project, fieldReference!!.classReference!!.text
-				+ "->setReadOnlyValue('" + fieldReference.name + "', "
-				+ assignment.value!!.text + ")"
+			val fieldReference = assignment.variable as FieldReference
+			val ref = PhpPsiElementFactory.createMethodReference(
+				project,
+				"${fieldReference.classReference!!.text}->setReadOnlyValue('${fieldReference.name}', ${assignment.value!!.text})"
 			)
 			assignment.replace(ref)
 		}

@@ -14,7 +14,6 @@ import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.PhpLanguage
 import com.jetbrains.php.lang.actions.PhpNamedElementNode
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty
-import com.jetbrains.php.lang.documentation.phpdoc.psi.impl.PhpDocPropertyImpl
 import com.jetbrains.php.lang.lexer.PhpTokenTypes
 import com.jetbrains.php.lang.parser.PhpElementTypes
 import com.jetbrains.php.lang.parser.PhpStubElementTypes
@@ -22,7 +21,6 @@ import com.jetbrains.php.lang.psi.PhpCodeEditUtil
 import com.jetbrains.php.lang.psi.PhpFile
 import com.jetbrains.php.lang.psi.elements.Field
 import com.jetbrains.php.lang.psi.elements.PhpClass
-import com.jetbrains.php.refactoring.importReferences.PhpClassReferenceResolver
 import org.nextras.orm.intellij.utils.OrmUtils
 import java.util.*
 
@@ -54,7 +52,6 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 			return
 		}
 
-		val members = list.toTypedArray() as Array<PhpNamedElementNode>
 		val insertPos = getSuitableEditorPosition(editor, phpFile)
 
 		val settings = CodeStyleSettingsManager.getInstance().currentSettings.getCommonSettings(PhpLanguage.INSTANCE)
@@ -64,28 +61,19 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 		settings.KEEP_BLANK_LINES_IN_CODE = 0
 
 		ApplicationManager.getApplication().runWriteAction {
-			val resolver = PhpClassReferenceResolver()
 			val textBuf = StringBuffer()
 
-			for (member in members) {
+			for (member in list) {
 				val field = member.psiElement
 				textBuf.append('\n')
 				textBuf.append(this@GenerateActionHandler.createAccessors(field as Field, project))
 			}
 
-			if (textBuf.length > 0 && insertPos >= 0) {
+			if (textBuf.isNotEmpty() && insertPos >= 0) {
 				editor.document.insertString(insertPos, textBuf)
 				val endPos = insertPos + textBuf.length
 				CodeStyleManager.getInstance(project).reformatText(phpFile, insertPos, endPos)
 				PsiDocumentManager.getInstance(project).commitDocument(editor.document)
-
-				/*List var17 = PhpGenerateFieldAccessorHandlerBase.collectInsertedElements(file, insertPos, insertedElementCount);
-					if(var17 != null && !var17.isEmpty()) {
-						PhpPsiElement var18 = PhpCodeInsightUtil.findScopeForUseOperator((PsiElement) var17.get(0));
-						if(var18 != null) {
-							resolver.importReferences(var18, var17);
-						}
-					}*/
 			}
 		}
 
@@ -101,23 +89,14 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 		return true
 	}
 
-	private fun getFields(phpClass: PhpClass): Collection<Field> {
-		val fields = ArrayList<Field>()
-		for (field in phpClass.fields) {
-			if (field is PhpDocPropertyImpl && this@GenerateActionHandler.canShow(field as PhpDocProperty, phpClass)) {
-				fields.add(field)
-			}
+	private fun getFields(phpClass: PhpClass): List<Field> {
+		return phpClass.fields.filter {
+			it is PhpDocProperty && canShow(it, phpClass)
 		}
-
-		return fields
 	}
 
 	private fun convertToNodes(fields: Collection<Field>): Array<PhpNamedElementNode> {
-		val nodes = ArrayList<PhpNamedElementNode>()
-		for (field in fields) {
-			nodes.add(PhpNamedElementNode(field))
-		}
-		return nodes.toTypedArray()
+		return fields.map { PhpNamedElementNode(it) }.toTypedArray()
 	}
 
 	private fun getSuitableEditorPosition(editor: Editor, phpFile: PhpFile): Int {
@@ -158,11 +137,11 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 	}
 
 	private fun isClassMember(element: PsiElement?): Boolean {
-		if (element == null) {
-			return false
+		return if (element == null) {
+			false
 		} else {
 			val elementType = element.node.elementType
-			return elementType === PhpElementTypes.CLASS_FIELDS || elementType === PhpElementTypes.CLASS_CONSTANTS || elementType === PhpStubElementTypes.CLASS_METHOD
+			elementType === PhpElementTypes.CLASS_FIELDS || elementType === PhpElementTypes.CLASS_CONSTANTS || elementType === PhpStubElementTypes.CLASS_METHOD
 		}
 	}
 

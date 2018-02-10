@@ -12,6 +12,26 @@ class PhpParserDefinition : com.jetbrains.php.lang.parser.PhpParserDefinition() 
 		PhpDocTagParserRegistry.register("@property-read", PhpDocPropertyTagParser())
 	}
 
+	override fun createElement(node: ASTNode): PsiElement {
+		return when (node.elementType) {
+			PhpDocTypes.phpDocTagModifier -> PhpDocTagModifier(node)
+			PhpDocTypes.phpDocTagModifierName -> PhpDocTagModifierName(node)
+			PhpDocTypes.phpDocTagModifierIdentifier -> {
+				if (node == getFirstArgument(node.treeParent)) {
+					val tagName = node.treeParent.firstChildNode.treeNext.text.trim { it <= ' ' }
+					if (tagName == "container") {
+						return PhpDocTagModifierClassType(node)
+					} else if (tagName.length in 3..4 && tagName.indexOf(':') == 1) { // m:n, 1:x, 1:1d …
+						return PhpDocTagModifierClassType(node)
+					}
+				}
+
+				return PhpDocTagModifierIdentifier(node)
+			}
+			else -> super.createElement(node)
+		}
+	}
+
 	private fun getFirstArgument(tagNode: ASTNode): ASTNode? {
 		var tagNameFound = false
 		var token: ASTNode? = tagNode.firstChildNode
@@ -27,25 +47,5 @@ class PhpParserDefinition : com.jetbrains.php.lang.parser.PhpParserDefinition() 
 			token = token.treeNext
 		}
 		return null
-	}
-
-	override fun createElement(node: ASTNode): PsiElement {
-		val type = node.elementType
-		if (type === PhpDocTypes.phpDocTagModifier) {
-			return PhpDocTagModifier(node)
-		} else if (type === PhpDocTypes.phpDocTagModifierName) {
-			return PhpDocTagModifierName(node)
-		} else if (type === PhpDocTypes.phpDocTagModifierIdentifier) {
-			if (node == getFirstArgument(node.treeParent)) {
-				val tagName = node.treeParent.firstChildNode.treeNext.text.trim { it <= ' ' }
-				if (tagName == "container") {
-					return PhpDocTagModifierClassType(node)
-				} else if (3 <= tagName.length && tagName.length <= 4 && tagName.indexOf(':') == 1) { // m:n, 1:x, 1:1d …
-					return PhpDocTagModifierClassType(node)
-				}
-			}
-			return PhpDocTagModifierIdentifier(node)
-		}
-		return super.createElement(node)
 	}
 }

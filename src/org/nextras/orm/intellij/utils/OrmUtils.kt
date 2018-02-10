@@ -27,7 +27,6 @@ object OrmUtils {
 	fun findRepositoryEntities(repositories: Collection<PhpClass>): Collection<PhpClass> {
 		val entities = HashSet<PhpClass>(1)
 		for (repositoryClass in repositories) {
-
 			val entityNamesMethod = repositoryClass.findMethodByName("getEntityClassNames") ?: return emptyList()
 			if (entityNamesMethod.lastChild !is GroupStatement) {
 				return emptyList()
@@ -38,6 +37,7 @@ object OrmUtils {
 			if ((entityNamesMethod.lastChild as GroupStatement).firstPsiChild!!.firstPsiChild !is ArrayCreationExpression) {
 				return emptyList()
 			}
+
 			val arr = (entityNamesMethod.lastChild as GroupStatement).firstPsiChild!!.firstPsiChild as ArrayCreationExpression?
 			val phpIndex = PhpIndex.getInstance(repositoryClass.project)
 			for (el in arr!!.children) {
@@ -59,10 +59,12 @@ object OrmUtils {
 		val entities = HashSet<PhpClass>()
 		val phpIndex = PhpIndex.getInstance(ref.project)
 		val classes = PhpIndexUtils.getByType(classReference.type, phpIndex)
+
 		val repositories = classes.filter { cls -> OrmClass.REPOSITORY.`is`(cls, phpIndex) }
-		if (repositories.size > 0) {
+		if (repositories.isNotEmpty()) {
 			entities.addAll(findRepositoryEntities(repositories))
 		}
+
 		for (type in classReference.type.types) {
 			if (!type.endsWith("[]")) {
 				continue
@@ -76,7 +78,7 @@ object OrmUtils {
 	}
 
 	fun findQueriedEntities(reference: MethodReference, path: Array<String>): Collection<PhpClass> {
-		if (path.size == 0) {
+		if (path.isEmpty()) {
 			return emptyList()
 		}
 		val rootEntities: Collection<PhpClass>
@@ -85,14 +87,16 @@ object OrmUtils {
 		} else {
 			val index = PhpIndex.getInstance(reference.project)
 			rootEntities = PhpIndexUtils.getByType(PhpType().add(path[0]), index)
-
 		}
-		if (rootEntities.size == 0) {
+
+		if (rootEntities.isEmpty()) {
 			return emptyList()
 		}
-		return if (path.size <= 1) {
-			rootEntities
-		} else findTargetEntities(rootEntities, path, 1)
+
+		return when {
+			path.size <= 1 -> rootEntities
+			else -> findTargetEntities(rootEntities, path, 1)
+		}
 	}
 
 	private fun findTargetEntities(currentEntities: Collection<PhpClass>, path: Array<String>, pos: Int): Collection<PhpClass> {
@@ -107,7 +111,7 @@ object OrmUtils {
 		return findTargetEntities(entities, path, pos + 1)
 	}
 
-	fun addEntitiesFromField(entities: MutableCollection<PhpClass>, field: PhpDocProperty) {
+	private fun addEntitiesFromField(entities: MutableCollection<PhpClass>, field: PhpDocProperty) {
 		val index = PhpIndex.getInstance(field.project)
 		for (type in field.type.types) {
 			if (type.contains("Nextras\\Orm\\Relationship")) {

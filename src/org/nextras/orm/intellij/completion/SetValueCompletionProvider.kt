@@ -13,33 +13,29 @@ import org.nextras.orm.intellij.utils.OrmUtils
 import org.nextras.orm.intellij.utils.PhpIndexUtils
 
 class SetValueCompletionProvider : CompletionProvider<CompletionParameters>() {
-
 	override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet) {
-		parameters.position
 		val el = parameters.position
-		if (el.parent == null
-			|| el.parent.parent == null
-			|| el.parent.parent !is ParameterList
-			|| (el.parent.parent as ParameterList).parameters[0] !== el.parent
-			|| el.parent.parent.parent == null
-			|| el.parent.parent.parent !is MethodReference) {
+
+		if (el.parent?.parent !is ParameterList || (el.parent.parent as ParameterList).parameters[0] !== el.parent) {
 			return
 		}
-		val methodReference = el.parent.parent.parent as MethodReference
+
+		val methodReference = el.parent?.parent?.parent as? MethodReference ?: return
 		if (methodReference.name != "setValue" && methodReference.name != "setReadOnlyValue") {
 			return
 		}
+
 		val phpIndex = PhpIndex.getInstance(el.project)
-		for (cls in PhpIndexUtils.getByType(methodReference.classReference!!.type, phpIndex)) {
-			if (!OrmUtils.OrmClass.ENTITY.`is`(cls, phpIndex)) {
-				continue
+		val classes = PhpIndexUtils.getByType(methodReference.classReference!!.type, phpIndex)
+
+		classes
+			.filter { OrmUtils.OrmClass.ENTITY.`is`(it, phpIndex) }
+			.flatMap { it.fields }
+			.filterIsInstance<PhpDocProperty>()
+			.forEach {
+				result.addElement(
+					LookupElementBuilder.create(it.name).withTypeText(it.type.toString())
+				)
 			}
-			for (field in cls.fields) {
-				if (field !is PhpDocProperty) {
-					continue
-				}
-				result.addElement(LookupElementBuilder.create(field.getName()).withTypeText(field.getType().toString()))
-			}
-		}
 	}
 }

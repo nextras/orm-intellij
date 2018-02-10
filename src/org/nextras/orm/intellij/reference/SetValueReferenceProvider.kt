@@ -10,12 +10,11 @@ import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 class SetValueReferenceProvider : PsiReferenceProvider() {
 	override fun getReferencesByElement(el: PsiElement, processingContext: ProcessingContext): Array<PsiReference> {
 		assert(el is StringLiteralExpression)
-		if (el.parent == null || el.parent.parent == null || el.parent.parent !is MethodReference) {
-			return emptyArray()
+		val method = el.parent?.parent as? MethodReference ?: return emptyArray()
+
+		return when (method.name) {
+			"setValue", "setReadOnlyValue" -> arrayOf(EntityPropertyReference(el as StringLiteralExpression))
+			else -> emptyArray()
 		}
-		val method = el.parent.parent as MethodReference
-		return if (method.name == null || !(method.name == "setValue" || method.name == "setReadOnlyValue")) {
-			emptyArray()
-		} else arrayOf(EntityPropertyReference(el as StringLiteralExpression))
 	}
 }

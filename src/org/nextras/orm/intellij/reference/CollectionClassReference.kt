@@ -13,7 +13,6 @@ class CollectionClassReference(
 	private val methodReference: MethodReference,
 	private val name: String
 ) : PsiPolyVariantReferenceBase<StringLiteralExpression>(psiElement, TextRange(1, name.length + 1)) {
-
 	override fun multiResolve(b: Boolean): Array<ResolveResult> {
 		val classes = OrmUtils.findQueriedEntities(methodReference, arrayOf(name))
 		return classes.map {

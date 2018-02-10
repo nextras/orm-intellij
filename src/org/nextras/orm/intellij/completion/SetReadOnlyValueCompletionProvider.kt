@@ -14,9 +14,7 @@ import com.jetbrains.php.lang.psi.elements.PhpClass
 import org.nextras.orm.intellij.utils.OrmUtils
 
 class SetReadOnlyValueCompletionProvider : CompletionProvider<CompletionParameters>() {
-
 	override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet) {
-		parameters.position
 		val el = parameters.position
 		val cls = PhpPsiUtil.getParentByCondition<PhpClass>(el, PhpClass.INSTANCEOF) ?: return
 
@@ -24,22 +22,22 @@ class SetReadOnlyValueCompletionProvider : CompletionProvider<CompletionParamete
 		if (!OrmUtils.OrmClass.ENTITY.`is`(cls, phpIndex)) {
 			return
 		}
-		for (field in cls.fields) {
-			if (field !is PhpDocProperty || field.getParent().firstChild.text != "@property-read") {
-				continue
+
+		cls.fields
+			.filter { it is PhpDocProperty && it.getParent().firstChild.text == "@property-read" }
+			.map {
+				LookupElementBuilder.create(it.name)
+					.withInsertHandler { insertionContext, lookupElement ->
+						val phpCode = "\$this->setReadOnlyValue('" + lookupElement.lookupString + "', );"
+						val document = insertionContext.document
+						document.replaceString(insertionContext.startOffset, insertionContext.tailOffset, phpCode)
+						PsiDocumentManager.getInstance(insertionContext.project).commitDocument(document)
+						insertionContext.editor.caretModel.moveToOffset(insertionContext.startOffset + phpCode.length - 2)
+					}
+					.withTypeText(it.type.toString())
+					.withIcon(PhpIcons.VARIABLE_WRITE_ACCESS)
+					.withPresentableText(it.name + " = ...")
 			}
-			val element = LookupElementBuilder.create(field.getName())
-				.withInsertHandler { insertionContext, lookupElement ->
-					val phpCode = "\$this->setReadOnlyValue('" + lookupElement.lookupString + "', );"
-					val document = insertionContext.document
-					document.replaceString(insertionContext.startOffset, insertionContext.tailOffset, phpCode)
-					PsiDocumentManager.getInstance(insertionContext.project).commitDocument(document)
-					insertionContext.editor.caretModel.moveToOffset(insertionContext.startOffset + phpCode.length - 2)
-				}
-				.withTypeText(field.getType().toString())
-				.withIcon(PhpIcons.VARIABLE_WRITE_ACCESS)
-				.withPresentableText(field.getName() + " = ...")
-			result.addElement(element)
-		}
+			.forEach { result.addElement(it) }
 	}
 }

@@ -20,18 +20,21 @@ class PersistenceMethodsTypeProvider : PhpTypeProvider3 {
 		if (element.name != "persist" && element.name != "persistAndFlush") {
 			return null
 		}
-		val className = element.classReference!!.name!!.toLowerCase()
 
 		//cannot access index here, so just dummy check
+		val className = element.classReference!!.name!!.toLowerCase()
 		if (!className.endsWith("model") && !className.endsWith("repository") && !className.endsWith("repositorycontainer")) {
 			return null
 		}
-		if (element.parameters.size == 0) {
+
+		if (element.parameters.isEmpty()) {
 			return null
 		}
-		return if (element.parameters[0] !is PhpTypedElement) {
-			null
-		} else (element.parameters[0] as PhpTypedElement).type
+
+		return when {
+			element.parameters[0] !is PhpTypedElement -> null
+			else -> (element.parameters[0] as PhpTypedElement).type
+		}
 	}
 
 	override fun getBySignature(expression: String, visited: Set<String>, depth: Int, project: Project): Collection<PhpNamedElement>? {

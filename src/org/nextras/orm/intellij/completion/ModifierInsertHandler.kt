@@ -7,7 +7,6 @@ import com.jetbrains.php.lang.documentation.phpdoc.parser.tags.PhpDocPropertyTag
 import com.jetbrains.php.lang.psi.PhpFile
 
 class ModifierInsertHandler(private val insertSpace: Boolean) : InsertHandler<LookupElement> {
-
 	override fun handleInsert(context: InsertionContext, element: LookupElement) {
 		val editor = context.editor
 		val caretModel = editor.caretModel

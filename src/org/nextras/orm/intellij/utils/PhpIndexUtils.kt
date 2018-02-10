@@ -6,9 +6,8 @@ import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import java.util.*
 
 object PhpIndexUtils {
-
 	fun getByType(type: PhpType, phpIndex: PhpIndex): Collection<PhpClass> {
-		return getByType(type, phpIndex, HashSet(), null as Set<String>?, 0)
+		return getByType(type, phpIndex, HashSet(), null, 0)
 	}
 
 	fun getByType(type: PhpType, phpIndex: PhpIndex, phpIndexVisited: Set<String>?, phpIndexDepth: Int): Collection<PhpClass> {
@@ -32,7 +31,6 @@ object PhpIndexUtils {
 				classes.addAll(phpIndex.getAnyByFQN(className))
 			}
 		}
-
 		return classes
 	}
 
@@ -41,7 +39,6 @@ object PhpIndexUtils {
 		for (el in phpIndex.getBySignature(sig)) {
 			classes.addAll(getByType(el.type, phpIndex, visited.toMutableSet(), phpIndexVisited, phpIndexDepth))
 		}
-
 		return classes
 	}
 }

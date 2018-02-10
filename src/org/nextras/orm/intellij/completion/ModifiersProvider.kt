@@ -7,10 +7,11 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 
 class ModifiersProvider : CompletionProvider<CompletionParameters>() {
-
-	override fun addCompletions(params: CompletionParameters,
-	                            context: ProcessingContext,
-	                            result: CompletionResultSet) {
+	override fun addCompletions(
+		params: CompletionParameters,
+		context: ProcessingContext,
+		result: CompletionResultSet
+	) {
 		result.addElement(LookupElementBuilder.create("enum").withInsertHandler(withParams))
 		result.addElement(LookupElementBuilder.create("default").withInsertHandler(withParams))
 		result.addElement(LookupElementBuilder.create("virtual").withInsertHandler(withoutParams))

@@ -12,30 +12,30 @@ import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 
 class ReferenceSearcher : QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters>() {
 	override fun processQuery(searchParameters: ReferencesSearch.SearchParameters, processor: Processor<PsiReference>) {
-		if (searchParameters.elementToSearch !is PhpDocProperty) {
-			return
-		}
-
-		val property = searchParameters.elementToSearch as PhpDocProperty
-
+		val property = searchParameters.elementToSearch as? PhpDocProperty ?: return
 		val providers = arrayOf(CollectionPropertyReferenceProvider(), SetValueReferenceProvider())
 
 		PsiSearchHelper.SERVICE.getInstance(property.project)
-			.processElementsWithWord({ psiElement, i ->
-				if (psiElement !is StringLiteralExpression) {
-					return@processElementsWithWord true
-				}
-				val processingContext = ProcessingContext()
-				processingContext.put("field", property.name)
-				for (provider in providers) {
-					for (reference in provider.getReferencesByElement(psiElement, processingContext)) {
-						if (reference.isReferenceTo(searchParameters.elementToSearch)) {
-							processor.process(reference)
-						}
+			.processElementsWithWord(
+				{ psiElement, i ->
+					if (psiElement !is StringLiteralExpression) {
+						return@processElementsWithWord true
 					}
-				}
 
+					val processingContext = ProcessingContext()
+					processingContext.put("field", property.name)
+					for (provider in providers) {
+						provider.getReferencesByElement(psiElement, processingContext)
+							.filter { it.isReferenceTo(searchParameters.elementToSearch) }
+							.forEach { processor.process(it) }
+					}
+
+					true
+				},
+				searchParameters.scopeDeterminedByUser,
+				property.name,
+				UsageSearchContext.IN_STRINGS,
 				true
-			}, searchParameters.scopeDeterminedByUser, property.name, UsageSearchContext.IN_STRINGS, true)
+			)
 	}
 }

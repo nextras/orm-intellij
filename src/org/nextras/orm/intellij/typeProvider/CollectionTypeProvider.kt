@@ -27,15 +27,18 @@ class CollectionTypeProvider : PhpTypeProvider3 {
 		if (!pluralMethods.contains(element.name) && !singularMethods.contains(element.name)) {
 			return null
 		}
-		val type = element.classReference!!.type
-		val resultType = PhpType()
-		val arraySuffix = if (pluralMethods.contains(element.name)) "[]" else ""
-		for (typeStr in type.filterMixed().filterNull().filterPrimitives().types) {
-			if (typeStr.startsWith("#V")) {
-				continue
-			}
-			resultType.add("#" + key + typeStr + "." + element.name + arraySuffix)
+
+		val arraySuffix = when {
+			pluralMethods.contains(element.name) -> "[]"
+			else -> ""
 		}
+		val type = element.classReference!!.type
+		val types = type.filterMixed().filterNull().filterPrimitives().types
+
+		val resultType = PhpType()
+		types
+			.filterNot { it.startsWith("#V") }
+			.forEach { resultType.add("#" + key + it + "." + element.name + arraySuffix) }
 		return resultType
 	}
 
@@ -43,6 +46,7 @@ class CollectionTypeProvider : PhpTypeProvider3 {
 		if (expression.endsWith("[]")) {
 			return emptyList()
 		}
+
 		val result = HashSet<PhpNamedElement>()
 		val pos = expression.lastIndexOf(".")
 		var refSig = expression.substring(0, pos)
@@ -53,17 +57,27 @@ class CollectionTypeProvider : PhpTypeProvider3 {
 		if (methodName.endsWith("[]")) {
 			methodName = methodName.substring(0, methodName.length - 2)
 		}
+
 		val index = PhpIndex.getInstance(project)
 		val types = PhpIndexUtils.getByType(PhpType().add(refSig), index, visited, depth)
 
-		if (types.stream().anyMatch { cls -> OrmUtils.OrmClass.HAS_MANY.`is`(cls, index) } && methodName == "get" && refSig.startsWith("#")) {
-			result.addAll(PhpIndexUtils.getByType(PhpType().add(PhpTypeSignatureKey.ARRAY_ELEMENT.sign(refSig)), index, visited, depth))
+		if (types.any { OrmUtils.OrmClass.HAS_MANY.`is`(it, index) } && methodName == "get" && refSig.startsWith("#")) {
+			result.addAll(
+				PhpIndexUtils.getByType(
+					PhpType().add(PhpTypeSignatureKey.ARRAY_ELEMENT.sign(refSig)),
+					index,
+					visited,
+					depth
+				)
+			)
+
 		} else {
-			result.addAll(types.filter { cls -> OrmUtils.OrmClass.ENTITY.`is`(cls, index) })
-			val repoClassesList = types.filter { cls -> OrmUtils.OrmClass.REPOSITORY.`is`(cls, index) }
-			if (repoClassesList.size > 0) {
+			result.addAll(types.filter { OrmUtils.OrmClass.ENTITY.`is`(it, index) })
+
+			val repoClassesList = types.filter { OrmUtils.OrmClass.REPOSITORY.`is`(it, index) }
+			if (repoClassesList.isNotEmpty()) {
 				result.addAll(OrmUtils.findRepositoryEntities(repoClassesList))
-				result.addAll(types.filter { cls -> OrmUtils.OrmClass.ENTITY.`is`(cls, index) })
+				result.addAll(types.filter { OrmUtils.OrmClass.ENTITY.`is`(it, index) })
 			}
 		}
 

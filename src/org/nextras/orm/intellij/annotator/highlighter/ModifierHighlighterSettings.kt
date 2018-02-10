@@ -10,7 +10,6 @@ import org.nextras.orm.intellij.Icons
 import javax.swing.Icon
 
 class ModifierHighlighterSettings : ColorSettingsPage {
-
 	override fun getIcon(): Icon? {
 		return Icons.FILE
 	}
@@ -40,6 +39,10 @@ class ModifierHighlighterSettings : ColorSettingsPage {
 	}
 
 	companion object {
-		private val DESCRIPTORS = arrayOf(AttributesDescriptor("Modifier braces", ModifierHighlighter.BRACES), AttributesDescriptor("Modifier name", ModifierHighlighter.MODIFIER), AttributesDescriptor("Modifier identifier", ModifierHighlighter.IDENTIFIER))
+		private val DESCRIPTORS = arrayOf(
+			AttributesDescriptor("Modifier braces", ModifierHighlighter.BRACES),
+			AttributesDescriptor("Modifier name", ModifierHighlighter.MODIFIER),
+			AttributesDescriptor("Modifier identifier", ModifierHighlighter.IDENTIFIER)
+		)
 	}
 }

@@ -14,23 +14,20 @@ class GenerateGettersSettersAction : CodeInsightAction() {
 	private val actionHandler = object : GenerateActionHandler() {
 		override fun canShow(property: PhpDocProperty, phpClass: PhpClass): Boolean {
 			val name = property.name
-			val getter_methodName = "getter" + name.substring(0, 1).toUpperCase() + name.substring(1)
-			val setter_methodName = "setter" + name.substring(0, 1).toUpperCase() + name.substring(1)
-			val getter_method = phpClass.findMethodByName(getter_methodName)
-			val setter_method = phpClass.findMethodByName(setter_methodName)
-			return getter_method == null && setter_method == null
+			val getterMethodName = "getter" + name.substring(0, 1).toUpperCase() + name.substring(1)
+			val setterMethodName = "setter" + name.substring(0, 1).toUpperCase() + name.substring(1)
+			val getterMethod = phpClass.findMethodByName(getterMethodName)
+			val setterMethod = phpClass.findMethodByName(setterMethodName)
+			return getterMethod == null && setterMethod == null
 		}
 
 		override fun createAccessors(field: Field, project: Project): String {
 			val name = field.name
-
-			val getter_methodName = "getter" + name.substring(0, 1).toUpperCase() + name.substring(1)
-			val getter_method = PhpPsiElementFactory.createMethod(project, "protected function $getter_methodName(\$value) { return \$value; }")
-
-			val setter_methodName = "setter" + name.substring(0, 1).toUpperCase() + name.substring(1)
-			val setter_method = PhpPsiElementFactory.createMethod(project, "protected function $setter_methodName(\$value) { return \$value; }")
-
-			return setter_method.text + '\n' + getter_method.text
+			val getterMethodName = "getter" + name.substring(0, 1).toUpperCase() + name.substring(1)
+			val getterMethod = PhpPsiElementFactory.createMethod(project, "protected function $getterMethodName(\$value) { return \$value; }")
+			val setterMethodName = "setter" + name.substring(0, 1).toUpperCase() + name.substring(1)
+			val setterMethod = PhpPsiElementFactory.createMethod(project, "protected function $setterMethodName(\$value) { return \$value; }")
+			return setterMethod.text + '\n' + getterMethod.text
 		}
 	}
 
