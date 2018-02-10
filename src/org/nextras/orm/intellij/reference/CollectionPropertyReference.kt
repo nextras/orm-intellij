@@ -25,7 +25,6 @@ class CollectionPropertyReference(
 		rangeInElement = TextRange(end - parts[pos].length, end)
 	}
 
-
 	override fun multiResolve(b: Boolean): Array<ResolveResult> {
 		val classes = OrmUtils.findQueriedEntities(methodReference, this.parts)
 		val fields = HashSet<Field>()

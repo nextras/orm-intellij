@@ -9,7 +9,8 @@ import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty
 import com.jetbrains.php.lang.inspections.PhpInspection
 import com.jetbrains.php.lang.psi.PhpPsiElementFactory
-import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.AssignmentExpression
+import com.jetbrains.php.lang.psi.elements.FieldReference
 import com.jetbrains.php.lang.psi.visitors.PhpElementVisitor
 import org.jetbrains.annotations.Nls
 import org.nextras.orm.intellij.utils.OrmUtils
@@ -17,11 +18,9 @@ import org.nextras.orm.intellij.utils.PhpIndexUtils
 
 class ReadOnlyPropertyInspection : PhpInspection() {
 
-
 	override fun getShortName(): String {
 		return "NextrasOrmReadOnlyProperty"
 	}
-
 
 	override fun buildVisitor(problemsHolder: ProblemsHolder, b: Boolean): PsiElementVisitor {
 		return object : PhpElementVisitor() {

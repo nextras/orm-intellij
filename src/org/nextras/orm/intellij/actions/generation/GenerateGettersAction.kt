@@ -8,9 +8,7 @@ import com.intellij.psi.PsiFile
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty
 import com.jetbrains.php.lang.psi.PhpPsiElementFactory
 import com.jetbrains.php.lang.psi.elements.Field
-import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.PhpClass
-
 
 class GenerateGettersAction : CodeInsightAction() {
 	private val actionHandler = object : GenerateActionHandler() {
@@ -29,11 +27,9 @@ class GenerateGettersAction : CodeInsightAction() {
 		}
 	}
 
-
 	override fun isValidForFile(project: Project, editor: Editor, file: PsiFile): Boolean {
 		return this.actionHandler.isValidForFile(project, editor, file)
 	}
-
 
 	override fun getHandler(): CodeInsightActionHandler {
 		return this.actionHandler

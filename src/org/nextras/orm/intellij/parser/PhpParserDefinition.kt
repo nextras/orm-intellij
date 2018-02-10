@@ -2,10 +2,8 @@ package org.nextras.orm.intellij.parser
 
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
-import com.intellij.psi.tree.IElementType
 import com.jetbrains.php.lang.documentation.phpdoc.parser.PhpDocParser
 import com.jetbrains.php.lang.documentation.phpdoc.parser.tags.PhpDocTagParserRegistry
-
 
 class PhpParserDefinition : com.jetbrains.php.lang.parser.PhpParserDefinition() {
 	init {
@@ -13,7 +11,6 @@ class PhpParserDefinition : com.jetbrains.php.lang.parser.PhpParserDefinition() 
 		PhpDocTagParserRegistry.register("@property", PhpDocPropertyTagParser())
 		PhpDocTagParserRegistry.register("@property-read", PhpDocPropertyTagParser())
 	}
-
 
 	private fun getFirstArgument(tagNode: ASTNode): ASTNode? {
 		var tagNameFound = false
@@ -31,7 +28,6 @@ class PhpParserDefinition : com.jetbrains.php.lang.parser.PhpParserDefinition() 
 		}
 		return null
 	}
-
 
 	override fun createElement(node: ASTNode): PsiElement {
 		val type = node.elementType

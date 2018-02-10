@@ -3,18 +3,14 @@ package org.nextras.orm.intellij.completion
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import com.jetbrains.php.lang.documentation.phpdoc.psi.tags.PhpDocPropertyTag
 import com.jetbrains.php.lang.parser.PhpElementTypes
-import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.Method
+import com.jetbrains.php.lang.psi.elements.MethodReference
+import com.jetbrains.php.lang.psi.elements.ParameterList
+import com.jetbrains.php.lang.psi.elements.PhpPsiElement
 import org.nextras.orm.intellij.utils.OrmUtils
-
-import java.util.Arrays
-import java.util.stream.Collectors
-import java.util.stream.Stream
-
+import java.util.*
 
 class EntityPropertiesProvider {
 	fun fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) {
@@ -37,7 +33,6 @@ class EntityPropertiesProvider {
 		}
 
 		val project = parameters.editor.project ?: return
-
 
 		val fieldExpression = parameters.originalPosition!!.text
 		val path = fieldExpression.split("->".toRegex()).toTypedArray()

@@ -7,7 +7,6 @@ import com.jetbrains.php.lang.PhpLanguage
 import com.jetbrains.php.lang.documentation.phpdoc.lexer.PhpDocTokenTypes
 import org.nextras.orm.intellij.parser.PhpDocTypes
 
-
 object ModifiersPatterns {
 	val modifierPattern: ElementPattern<PsiElement>
 		get() = PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER)

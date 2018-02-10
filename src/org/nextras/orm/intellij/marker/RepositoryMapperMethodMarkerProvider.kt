@@ -8,14 +8,10 @@ import com.jetbrains.php.PhpIcons
 import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocMethod
 import com.jetbrains.php.lang.psi.elements.Method
-import com.jetbrains.php.lang.psi.elements.PhpClass
 import org.nextras.orm.intellij.utils.OrmUtils
-
-import java.util.ArrayList
-import java.util.HashSet
+import java.util.*
 
 class RepositoryMapperMethodMarkerProvider : RelatedItemLineMarkerProvider() {
-
 
 	override fun collectNavigationMarkers(element: PsiElement, result: MutableCollection<in RelatedItemLineMarkerInfo<*>>) {
 		if (element !is PhpDocMethod) {
@@ -31,7 +27,6 @@ class RepositoryMapperMethodMarkerProvider : RelatedItemLineMarkerProvider() {
 		}
 		val repositoryClass = containingClass.fqn
 		val mapperClass = repositoryClass.substring(0, repositoryClass.length - 10) + "Mapper"
-
 
 		val phpIndex = PhpIndex.getInstance(element.getProject())
 		val methods = ArrayList<Method>()
@@ -62,6 +57,5 @@ class RepositoryMapperMethodMarkerProvider : RelatedItemLineMarkerProvider() {
 			baseMethods.add("getById")
 		}
 	}
-
 
 }

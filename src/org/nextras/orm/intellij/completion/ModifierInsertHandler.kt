@@ -3,13 +3,8 @@ package org.nextras.orm.intellij.completion
 import com.intellij.codeInsight.completion.InsertHandler
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElement
-import com.intellij.openapi.editor.CaretModel
-import com.intellij.openapi.editor.Document
-import com.intellij.openapi.editor.Editor
-import com.intellij.psi.PsiElement
 import com.jetbrains.php.lang.documentation.phpdoc.parser.tags.PhpDocPropertyTagParser
 import com.jetbrains.php.lang.psi.PhpFile
-
 
 class ModifierInsertHandler(private val insertSpace: Boolean) : InsertHandler<LookupElement> {
 

@@ -5,7 +5,6 @@ import com.jetbrains.php.lang.documentation.phpdoc.lexer.PhpDocTokenTypes
 import com.jetbrains.php.lang.documentation.phpdoc.parser.PhpDocElementTypes
 import com.jetbrains.php.lang.parser.PhpPsiBuilder
 
-
 class PhpDocPropertyTagParser : com.jetbrains.php.lang.documentation.phpdoc.parser.tags.PhpDocPropertyTagParser() {
 	override fun parse(builder: PhpPsiBuilder, inside: Boolean) {
 		val tag = builder.mark()
@@ -19,7 +18,7 @@ class PhpDocPropertyTagParser : com.jetbrains.php.lang.documentation.phpdoc.pars
 	}
 
 	companion object {
- 		private fun parseValue(builder: PhpPsiBuilder) {
+		private fun parseValue(builder: PhpPsiBuilder) {
 			val value = builder.mark()
 
 			while (true) {
@@ -44,7 +43,6 @@ class PhpDocPropertyTagParser : com.jetbrains.php.lang.documentation.phpdoc.pars
 
 			value.done(PhpDocElementTypes.phpDocTagValue)
 		}
-
 
 		private fun parseModifierContent(builder: PhpPsiBuilder) {
 			val modifierName = builder.mark()

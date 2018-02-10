@@ -7,42 +7,33 @@ import com.intellij.openapi.options.colors.ColorDescriptor
 import com.intellij.openapi.options.colors.ColorSettingsPage
 import com.jetbrains.php.lang.highlighter.PhpFileSyntaxHighlighter
 import org.nextras.orm.intellij.Icons
-
-import javax.swing.*
-
+import javax.swing.Icon
 
 class ModifierHighlighterSettings : ColorSettingsPage {
-
 
 	override fun getIcon(): Icon? {
 		return Icons.FILE
 	}
 
-
 	override fun getHighlighter(): SyntaxHighlighter {
 		return PhpFileSyntaxHighlighter()
 	}
-
 
 	override fun getDemoText(): String {
 		return "<?php\n// Sadly, there is no way how to preview your color settings in here."
 	}
 
-
 	override fun getAdditionalHighlightingTagToDescriptorMap(): Map<String, TextAttributesKey>? {
 		return null
 	}
-
 
 	override fun getAttributeDescriptors(): Array<AttributesDescriptor> {
 		return DESCRIPTORS
 	}
 
-
 	override fun getColorDescriptors(): Array<ColorDescriptor> {
 		return ColorDescriptor.EMPTY_ARRAY
 	}
-
 
 	override fun getDisplayName(): String {
 		return "Nextras Orm"

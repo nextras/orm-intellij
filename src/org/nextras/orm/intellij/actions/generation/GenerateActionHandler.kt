@@ -10,8 +10,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings
-import com.intellij.psi.tree.IElementType
 import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.PhpLanguage
 import com.jetbrains.php.lang.actions.PhpNamedElementNode
@@ -26,9 +24,7 @@ import com.jetbrains.php.lang.psi.elements.Field
 import com.jetbrains.php.lang.psi.elements.PhpClass
 import com.jetbrains.php.refactoring.importReferences.PhpClassReferenceResolver
 import org.nextras.orm.intellij.utils.OrmUtils
-
-import java.util.ArrayList
-
+import java.util.*
 
 abstract class GenerateActionHandler : CodeInsightActionHandler {
 	fun isValidForFile(project: Project, editor: Editor, file: PsiFile): Boolean {
@@ -37,12 +33,9 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 		}
 
 		val phpClass = PhpCodeEditUtil.findClassAtCaret(editor, file) ?: return false
-
 		val phpIndex = PhpIndex.getInstance(project)
-
 		return OrmUtils.OrmClass.ENTITY.`is`(phpClass, phpIndex)
 	}
-
 
 	override fun invoke(project: Project, editor: Editor, file: PsiFile) {
 		val phpFile = file as PhpFile
@@ -100,17 +93,13 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 		settings.KEEP_BLANK_LINES_IN_CODE = currBlankLines
 	}
 
-
 	protected abstract fun canShow(property: PhpDocProperty, phpClass: PhpClass): Boolean
 
-
 	protected abstract fun createAccessors(field: Field, project: Project): String
-
 
 	override fun startInWriteAction(): Boolean {
 		return true
 	}
-
 
 	private fun getFields(phpClass: PhpClass): Collection<Field> {
 		val fields = ArrayList<Field>()
@@ -123,7 +112,6 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 		return fields
 	}
 
-
 	private fun convertToNodes(fields: Collection<Field>): Array<PhpNamedElementNode> {
 		val nodes = ArrayList<PhpNamedElementNode>()
 		for (field in fields) {
@@ -131,7 +119,6 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 		}
 		return nodes.toTypedArray()
 	}
-
 
 	private fun getSuitableEditorPosition(editor: Editor, phpFile: PhpFile): Int {
 		val currElement = phpFile.findElementAt(editor.caretModel.offset)
@@ -170,7 +157,6 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 		return -1
 	}
 
-
 	private fun isClassMember(element: PsiElement?): Boolean {
 		if (element == null) {
 			return false
@@ -180,10 +166,8 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 		}
 	}
 
-
 	private fun getNextPos(element: PsiElement): Int {
 		val next = element.nextSibling
 		return next?.textOffset ?: -1
 	}
-
 }

@@ -20,7 +20,6 @@ class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
 			return emptyArray()
 		}
 
-
 		val parts = matcher.group(1).split("->".toRegex()).toTypedArray()
 		if (parts.size == 0) {
 			return emptyArray()

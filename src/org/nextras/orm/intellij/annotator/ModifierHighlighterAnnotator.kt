@@ -4,16 +4,12 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
-import com.intellij.psi.tree.IElementType
 import com.jetbrains.php.lang.documentation.phpdoc.lexer.PhpDocTokenTypes
-import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocType
-import com.jetbrains.php.lang.documentation.phpdoc.psi.impl.PhpDocTypeImpl
 import org.nextras.orm.intellij.annotator.highlighter.ModifierHighlighter
 import org.nextras.orm.intellij.parser.PhpDocTagModifier
 import org.nextras.orm.intellij.parser.PhpDocTagModifierClassType
-import org.nextras.orm.intellij.parser.PhpDocTagModifierName
 import org.nextras.orm.intellij.parser.PhpDocTagModifierIdentifier
-
+import org.nextras.orm.intellij.parser.PhpDocTagModifierName
 
 class ModifierHighlighterAnnotator : Annotator {
 	override fun annotate(psiElement: PsiElement, annotationHolder: AnnotationHolder) {
