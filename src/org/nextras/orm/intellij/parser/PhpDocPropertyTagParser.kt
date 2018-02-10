@@ -55,12 +55,9 @@ class PhpDocPropertyTagParser : com.jetbrains.php.lang.documentation.phpdoc.pars
 			}
 			modifierName.done(PhpDocTypes.phpDocTagModifierName)
 
-			var modifierKey: PsiBuilder.Marker
-			while (true) {
-				if (builder.eof() || builder.compare(PhpDocTokenTypes.DOC_TAG_VALUE_END) || builder.compareAndEat(PhpDocTokenTypes.DOC_RBRACE)) {
-					break
-				} else if (builder.compare(PhpDocTokenTypes.DOC_IDENTIFIER) || builder.compare(PhpDocTokenTypes.DOC_STRING)) {
-					modifierKey = builder.mark()
+			while (!builder.compare(PhpDocTokenTypes.DOC_RBRACE) && !builder.compare(PhpDocTokenTypes.DOC_TAG_VALUE_END) && !builder.eof()) {
+				if (builder.compare(PhpDocTokenTypes.DOC_IDENTIFIER) || builder.compare(PhpDocTokenTypes.DOC_STRING)) {
+					val modifierKey = builder.mark()
 					builder.advanceLexer()
 					modifierKey.done(PhpDocTypes.phpDocTagModifierIdentifier)
 				} else {
