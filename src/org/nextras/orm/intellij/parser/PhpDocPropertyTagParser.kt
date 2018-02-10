@@ -47,18 +47,10 @@ class PhpDocPropertyTagParser : com.jetbrains.php.lang.documentation.phpdoc.pars
 		private fun parseModifierContent(builder: PhpPsiBuilder) {
 			val modifierName = builder.mark()
 			while (!builder.compare(PhpDocTokenTypes.DOC_RBRACE) && !builder.compare(PhpDocTokenTypes.DOC_TAG_VALUE_END) && !builder.eof()) {
-				if (builder.tokenText != null) {
-					// fix {m:1 foo} parsed as ["m", ":1 ", "foo"]
-					val tagText = builder.tokenText
-					if (tagText == " ") {
-						break
-					}
-					if (tagText!!.indexOf(':') == 0 && tagText.endsWith(" ") && tagText.length == 3) {
-						builder.advanceLexer()
-						break
-					}
+				if (builder.tokenText?.contains("\\s".toRegex()) == true) {
+					builder.advanceLexer()
+					break
 				}
-
 				builder.advanceLexer()
 			}
 			modifierName.done(PhpDocTypes.phpDocTagModifierName)
