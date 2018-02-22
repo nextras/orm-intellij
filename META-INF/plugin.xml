@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.nextras.orm.intellij</id>
 	<name>Nextras Orm Plugin</name>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.org">Nextras</vendor>
 
 	<description><![CDATA[
@@ -9,6 +9,12 @@
 	]]></description>
 
 	<change-notes><![CDATA[
+		<p>0.4.5</p>
+		<ul>
+			<li>fixed parsing/highlighting of {1:n} modifier</li>
+			<li>fixed compatibility with PhpStorm 2018.1 EAP 181.3494.16 (second attempt)</li>
+			<li>whole plugin rewritten in Kotlin</li>
+		</ul>
 		<p>0.4.4</p>
 		<ul>
 			<li>fixed compatibility with PhpStorm 2018.1 EAP 181.3494.16</li>
