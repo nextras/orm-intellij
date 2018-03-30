@@ -1,6 +1,5 @@
 package org.nextras.orm.intellij.parser
 
-import com.intellij.lang.PsiBuilder
 import com.jetbrains.php.lang.documentation.phpdoc.lexer.PhpDocTokenTypes
 import com.jetbrains.php.lang.documentation.phpdoc.parser.PhpDocElementTypes
 import com.jetbrains.php.lang.parser.PhpPsiBuilder
@@ -30,6 +29,9 @@ class PhpDocPropertyTagParser : com.jetbrains.php.lang.documentation.phpdoc.pars
 					val modifier = builder.mark()
 					builder.advanceLexer()
 					parseModifierContent(builder)
+					if (builder.compare(PhpDocTokenTypes.DOC_RBRACE)) {
+						builder.advanceLexer()
+					}
 					modifier.done(PhpDocTypes.phpDocTagModifier)
 				} else {
 					break

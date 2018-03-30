@@ -9,7 +9,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" scope="PROVIDED" name="annotations" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="php-openapi" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="annotations" level="project" />
   </component>
 </module>

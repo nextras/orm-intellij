@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.nextras.orm.intellij</id>
 	<name>Nextras Orm Plugin</name>
-	<version>0.4.5</version>
+	<version>0.4.6</version>
 	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.org">Nextras</vendor>
 
 	<description><![CDATA[
@@ -9,6 +9,10 @@
 	]]></description>
 
 	<change-notes><![CDATA[
+		<p>0.4.6</p>
+		<ul>
+			<li>fixed highlighting of closing modifier bracket</li>
+		</ul>
 		<p>0.4.5</p>
 		<ul>
 			<li>fixed parsing/highlighting of {1:n} modifier</li>
