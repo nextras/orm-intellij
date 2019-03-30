@@ -1,3 +1,7 @@
+/.idea/modules
+/.idea/dictionaries
 /.idea/libraries
 /.idea/workspace.xml
 /out
+/build
+/.gradle

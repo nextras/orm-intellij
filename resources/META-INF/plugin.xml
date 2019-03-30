@@ -62,10 +62,10 @@
 		</ul>
 	]]></change-notes>
 
-	<idea-version since-build="181.3494"/>
+	<idea-version since-build="191.6183"/>
 
-	<depends>com.jetbrains.php</depends>
 	<depends>com.intellij.modules.platform</depends>
+	<depends>com.jetbrains.php</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<completion.contributor
