@@ -1,6 +1,6 @@
 <idea-plugin>
 	<id>org.nextras.orm.intellij</id>
-	<name>Nextras Orm Plugin</name>
+	<name>Nextras Orm</name>
 	<version>0.4.6</version>
 	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.org">Nextras</vendor>
 
@@ -29,9 +29,9 @@
 		</ul>
 		<p>0.4.2</p>
 		<ul>
-		    <li>add reference searcher</li>
-		    <li>add support for HasMany::get()</li>
-		    <li>fixes, refactoring</li>
+			<li>add reference searcher</li>
+			<li>add support for HasMany::get()</li>
+			<li>fixes, refactoring</li>
 		</ul>
 		<p>0.4.1</p>
 
@@ -46,7 +46,7 @@
 		<ul>
 			<li>field name completion in setValue/setReadOnlyValue</li>
 			<li>references from setValue/setReadOnlyValue to field on an entity (goto, refactoring)</li>
-			<li>@propety-read inspection with quick fix</li>
+			<li>@property-read inspection with quick fix</li>
 			<li>whole setReadOnlyValue expression completion</li>
 		</ul>
 		<p>0.2.0</p>
@@ -60,7 +60,7 @@
 			<li>basic support for ORM Entity getters/setters generation</li>
 			<li>completion for modifier names</li>
 		</ul>
-    ]]></change-notes>
+	]]></change-notes>
 
 	<idea-version since-build="181.3494"/>
 
@@ -68,19 +68,32 @@
 	<depends>com.intellij.modules.platform</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<completion.contributor language="PHP" implementationClass="org.nextras.orm.intellij.completion.OrmCompletionContributor"/>
-		<lang.parserDefinition language="PHP" implementationClass="org.nextras.orm.intellij.parser.PhpParserDefinition" order="first"/>
-		<annotator language="PHP" implementationClass="org.nextras.orm.intellij.annotator.ModifierHighlighterAnnotator"/>
+		<completion.contributor
+			language="PHP"
+			implementationClass="org.nextras.orm.intellij.completion.OrmCompletionContributor"/>
+		<lang.parserDefinition
+			language="PHP"
+			implementationClass="org.nextras.orm.intellij.parser.PhpParserDefinition"
+			order="first"/>
+		<annotator
+			language="PHP"
+			implementationClass="org.nextras.orm.intellij.annotator.ModifierHighlighterAnnotator"/>
 		<colorSettingsPage implementation="org.nextras.orm.intellij.annotator.highlighter.ModifierHighlighterSettings"/>
-		<psi.referenceContributor language="PHP" implementation="org.nextras.orm.intellij.reference.OrmReferenceContributor"/>
+		<psi.referenceContributor
+			language="PHP"
+			implementation="org.nextras.orm.intellij.reference.OrmReferenceContributor"/>
 		<referencesSearch implementation="org.nextras.orm.intellij.reference.ReferenceSearcher"/>
-		<localInspection language="PHP"
-		        implementationClass="org.nextras.orm.intellij.inspection.ReadOnlyPropertyInspection"
-		        shortName="NextrasOrmReadOnlyProperty" id="NextrasOrmReadOnlyProperty"
-		        displayName="Read only property check"
-		        groupName="Nextras"
-		        level="WARNING"/>
-		<codeInsight.lineMarkerProvider language="PHP" implementationClass="org.nextras.orm.intellij.marker.RepositoryMapperMethodMarkerProvider"/>
+		<localInspection
+			language="PHP"
+			implementationClass="org.nextras.orm.intellij.inspection.ReadOnlyPropertyInspection"
+			shortName="NextrasOrmReadOnlyProperty"
+			id="NextrasOrmReadOnlyProperty"
+			displayName="Read only property check"
+			groupName="Nextras"
+			level="WARNING"/>
+		<codeInsight.lineMarkerProvider
+			language="PHP"
+			implementationClass="org.nextras.orm.intellij.marker.RepositoryMapperMethodMarkerProvider"/>
 	</extensions>
 	<extensions defaultExtensionNs="com.jetbrains.php">
 		<typeProvider3 implementation="org.nextras.orm.intellij.typeProvider.PersistenceMethodsTypeProvider"/>
@@ -88,20 +101,25 @@
 	</extensions>
 
 	<actions>
-		<action id="ormGenerateSettersAction" class="org.nextras.orm.intellij.actions.generation.GenerateSettersAction"
-		        text="ORM Setters..."
-		        description="Generate ORM Setters">
+		<action
+			id="ormGenerateSettersAction"
+			class="org.nextras.orm.intellij.actions.generation.GenerateSettersAction"
+			text="ORM Setters..."
+			description="Generate ORM Setters">
 			<add-to-group group-id="GenerateGroup" anchor="first"/>
 		</action>
-		<action id="ormGenerateGettersSettersAction"
-		        class="org.nextras.orm.intellij.actions.generation.GenerateGettersSettersAction"
-		        text="ORM Getters and Setters..."
-		        description="Generate ORM Getters and Setters">
+		<action
+			id="ormGenerateGettersSettersAction"
+			class="org.nextras.orm.intellij.actions.generation.GenerateGettersSettersAction"
+			text="ORM Getters and Setters..."
+			description="Generate ORM Getters and Setters">
 			<add-to-group group-id="GenerateGroup" anchor="first"/>
 		</action>
-		<action id="ormGenerateGettersAction" class="org.nextras.orm.intellij.actions.generation.GenerateGettersAction"
-		        text="ORM Getters..."
-		        description="Generate ORM Getters">
+		<action
+			id="ormGenerateGettersAction"
+			class="org.nextras.orm.intellij.actions.generation.GenerateGettersAction"
+			text="ORM Getters..."
+			description="Generate ORM Getters">
 			<add-to-group group-id="GenerateGroup" anchor="first"/>
 		</action>
 	</actions>
