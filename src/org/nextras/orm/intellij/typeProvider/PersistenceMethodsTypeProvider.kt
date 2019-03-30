@@ -6,9 +6,9 @@ import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
-import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider3
+import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 
-class PersistenceMethodsTypeProvider : PhpTypeProvider3 {
+class PersistenceMethodsTypeProvider : PhpTypeProvider4 {
 	override fun getKey(): Char {
 		return '\u0240'
 	}
@@ -35,6 +35,10 @@ class PersistenceMethodsTypeProvider : PhpTypeProvider3 {
 			element.parameters[0] !is PhpTypedElement -> null
 			else -> (element.parameters[0] as PhpTypedElement).type
 		}
+	}
+
+	override fun complete(expression: String?, project: Project?): PhpType? {
+		return null
 	}
 
 	override fun getBySignature(expression: String, visited: Set<String>, depth: Int, project: Project): Collection<PhpNamedElement>? {

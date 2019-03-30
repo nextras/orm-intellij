@@ -6,13 +6,13 @@ import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
-import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider3
+import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeSignatureKey
 import org.nextras.orm.intellij.utils.OrmUtils
 import org.nextras.orm.intellij.utils.PhpIndexUtils
 import java.util.*
 
-class CollectionTypeProvider : PhpTypeProvider3 {
+class CollectionTypeProvider : PhpTypeProvider4 {
 	override fun getKey(): Char {
 		return '\u0241'
 	}
@@ -40,6 +40,10 @@ class CollectionTypeProvider : PhpTypeProvider3 {
 			.filterNot { it.startsWith("#V") }
 			.forEach { resultType.add("#" + key + it + "." + element.name + arraySuffix) }
 		return resultType
+	}
+
+	override fun complete(expression: String?, project: Project?): PhpType? {
+		return null
 	}
 
 	override fun getBySignature(expression: String, visited: Set<String>, depth: Int, project: Project): Collection<PhpNamedElement> {

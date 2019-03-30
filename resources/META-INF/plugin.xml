@@ -96,8 +96,8 @@
 			implementationClass="org.nextras.orm.intellij.marker.RepositoryMapperMethodMarkerProvider"/>
 	</extensions>
 	<extensions defaultExtensionNs="com.jetbrains.php">
-		<typeProvider3 implementation="org.nextras.orm.intellij.typeProvider.PersistenceMethodsTypeProvider"/>
-		<typeProvider3 implementation="org.nextras.orm.intellij.typeProvider.CollectionTypeProvider"/>
+		<typeProvider4 implementation="org.nextras.orm.intellij.typeProvider.PersistenceMethodsTypeProvider"/>
+		<typeProvider4 implementation="org.nextras.orm.intellij.typeProvider.CollectionTypeProvider"/>
 	</extensions>
 
 	<actions>
