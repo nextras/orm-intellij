@@ -7,9 +7,7 @@ import com.intellij.psi.PsiElement
 import com.jetbrains.php.PhpIcons
 import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocMethod
-import com.jetbrains.php.lang.psi.elements.Method
 import org.nextras.orm.intellij.utils.OrmUtils
-import java.util.*
 
 class RepositoryMapperMethodMarkerProvider : RelatedItemLineMarkerProvider() {
 	override fun collectNavigationMarkers(element: PsiElement, result: MutableCollection<in RelatedItemLineMarkerInfo<*>>) {

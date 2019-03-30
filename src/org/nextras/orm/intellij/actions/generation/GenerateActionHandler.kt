@@ -9,9 +9,7 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.codeStyle.CodeStyleManager
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager
 import com.jetbrains.php.PhpIndex
-import com.jetbrains.php.lang.PhpLanguage
 import com.jetbrains.php.lang.actions.PhpNamedElementNode
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty
 import com.jetbrains.php.lang.lexer.PhpTokenTypes
@@ -22,7 +20,6 @@ import com.jetbrains.php.lang.psi.PhpFile
 import com.jetbrains.php.lang.psi.elements.Field
 import com.jetbrains.php.lang.psi.elements.PhpClass
 import org.nextras.orm.intellij.utils.OrmUtils
-import java.util.*
 
 abstract class GenerateActionHandler : CodeInsightActionHandler {
 	fun isValidForFile(project: Project, editor: Editor, file: PsiFile): Boolean {
@@ -54,12 +51,6 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 
 		val insertPos = getSuitableEditorPosition(editor, phpFile)
 
-		val settings = CodeStyleSettingsManager.getInstance().currentSettings.getCommonSettings(PhpLanguage.INSTANCE)
-		val currLineBreaks = settings.KEEP_LINE_BREAKS
-		val currBlankLines = settings.KEEP_BLANK_LINES_IN_CODE
-		settings.KEEP_LINE_BREAKS = false
-		settings.KEEP_BLANK_LINES_IN_CODE = 0
-
 		ApplicationManager.getApplication().runWriteAction {
 			val textBuf = StringBuffer()
 
@@ -76,9 +67,6 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 				PsiDocumentManager.getInstance(project).commitDocument(editor.document)
 			}
 		}
-
-		settings.KEEP_LINE_BREAKS = currLineBreaks
-		settings.KEEP_BLANK_LINES_IN_CODE = currBlankLines
 	}
 
 	protected abstract fun canShow(property: PhpDocProperty, phpClass: PhpClass): Boolean

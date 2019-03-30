@@ -11,13 +11,13 @@ import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 
 class ReferenceSearcher : QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters>() {
-	override fun processQuery(searchParameters: ReferencesSearch.SearchParameters, processor: Processor<PsiReference>) {
+	override fun processQuery(searchParameters: ReferencesSearch.SearchParameters, processor: Processor<in PsiReference>) {
 		val property = searchParameters.elementToSearch as? PhpDocProperty ?: return
 		val providers = arrayOf(CollectionPropertyReferenceProvider(), SetValueReferenceProvider())
 
-		PsiSearchHelper.SERVICE.getInstance(property.project)
+		PsiSearchHelper.getInstance(property.project)
 			.processElementsWithWord(
-				{ psiElement, i ->
+				{ psiElement, _ ->
 					if (psiElement !is StringLiteralExpression) {
 						return@processElementsWithWord true
 					}
