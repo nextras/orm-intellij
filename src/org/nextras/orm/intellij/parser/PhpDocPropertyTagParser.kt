@@ -49,7 +49,7 @@ class PhpDocPropertyTagParser : com.jetbrains.php.lang.documentation.phpdoc.pars
 		private fun parseModifierContent(builder: PhpPsiBuilder) {
 			val modifierName = builder.mark()
 			while (!builder.compare(PhpDocTokenTypes.DOC_RBRACE) && !builder.compare(PhpDocTokenTypes.DOC_TAG_VALUE_END) && !builder.eof()) {
-				if (builder.tokenText?.contains("\\s".toRegex()) == true) {
+				if (builder.rawLookup(1) == PhpDocTokenTypes.DOC_WHITESPACE) {
 					builder.advanceLexer()
 					break
 				}
@@ -58,7 +58,7 @@ class PhpDocPropertyTagParser : com.jetbrains.php.lang.documentation.phpdoc.pars
 			modifierName.done(PhpDocTypes.phpDocTagModifierName)
 
 			while (!builder.compare(PhpDocTokenTypes.DOC_RBRACE) && !builder.compare(PhpDocTokenTypes.DOC_TAG_VALUE_END) && !builder.eof()) {
-				if (builder.compare(PhpDocTokenTypes.DOC_IDENTIFIER) || builder.compare(PhpDocTokenTypes.DOC_STRING)) {
+				if (builder.compare(PhpDocTokenTypes.DOC_IDENTIFIER) || builder.compare(PhpDocTokenTypes.DOC_STRING) || builder.compare(PhpDocTokenTypes.DOC_VARIABLE)) {
 					val modifierKey = builder.mark()
 					builder.advanceLexer()
 					modifierKey.done(PhpDocTypes.phpDocTagModifierIdentifier)
