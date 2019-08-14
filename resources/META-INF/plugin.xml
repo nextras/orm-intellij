@@ -1,7 +1,6 @@
 <idea-plugin>
 	<id>org.nextras.orm.intellij</id>
 	<name>Nextras Orm</name>
-	<version>0.5.0</version>
 	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.org">Nextras</vendor>
 
 	<description><![CDATA[
@@ -9,6 +8,10 @@
 	]]></description>
 
 	<change-notes><![CDATA[
+		<p>0.5.1</p>
+		<ul>
+			<li>fixed (opened) compatibility with IDEs 2019.2+</li>
+		</ul>
 		<p>0.5.0</p>
 		<ul>
 			<li>fixed compatibility with IDEs 2019.1+</li>
