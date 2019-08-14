@@ -39,7 +39,7 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 		val fields = getFields(phpClass!!)
 		val nodes = this.convertToNodes(fields)
 
-		val chooser = MemberChooser(nodes, false, false, project)
+		val chooser = MemberChooser(nodes, false, true, project)
 		chooser.title = "Choose Fields"
 		chooser.setCopyJavadocVisible(false)
 		val isOk = chooser.showAndGet()
