@@ -1,72 +1,15 @@
 <idea-plugin>
 	<id>org.nextras.orm.intellij</id>
 	<name>Nextras Orm</name>
-	<vendor email="hrach.cz@gmail.com" url="http://www.nextras.org">Nextras</vendor>
+	<vendor url="https://www.nextras.org">Nextras</vendor>
 
 	<description><![CDATA[
 			Provides support for <a href="https://github.com/nextras/orm/">Nextras ORM</a> &ndash; an ORM library for PHP.
 	]]></description>
 
 	<change-notes><![CDATA[
-		<p>0.5.1</p>
 		<ul>
 			<li>fixed (opened) compatibility with IDEs 2019.2+</li>
-		</ul>
-		<p>0.5.0</p>
-		<ul>
-			<li>fixed compatibility with IDEs 2019.1+</li>
-			<li>internal changes</li>
-		</ul>
-		<p>0.4.6</p>
-		<ul>
-			<li>fixed highlighting of closing modifier bracket</li>
-		</ul>
-		<p>0.4.5</p>
-		<ul>
-			<li>fixed parsing/highlighting of {1:n} modifier</li>
-			<li>fixed compatibility with PhpStorm 2018.1 EAP 181.3494.16 (second attempt)</li>
-			<li>whole plugin rewritten in Kotlin</li>
-		</ul>
-		<p>0.4.4</p>
-		<ul>
-			<li>fixed compatibility with PhpStorm 2018.1 EAP 181.3494.16</li>
-		</ul>
-		<p>0.4.3</p>
-		<ul>
-			<li>fixes and optimization</li>
-		</ul>
-		<p>0.4.2</p>
-		<ul>
-			<li>add reference searcher</li>
-			<li>add support for HasMany::get()</li>
-			<li>fixes, refactoring</li>
-		</ul>
-		<p>0.4.1</p>
-
-		<p>0.4.0</p>
-		<ul>
-			<li>completion and references in findBy/getBy/orderBy methods</li>
-			<li>marker for navigation from repository phpdoc method to original mapper method</li>
-			<li>type provider for persist and persistAndFlush methods</li>
-			<li>type provider for collections</li>
-		</ul>
-		<p>0.3.0</p>
-		<ul>
-			<li>field name completion in setValue/setReadOnlyValue</li>
-			<li>references from setValue/setReadOnlyValue to field on an entity (goto, refactoring)</li>
-			<li>@property-read inspection with quick fix</li>
-			<li>whole setReadOnlyValue expression completion</li>
-		</ul>
-		<p>0.2.0</p>
-		<ul>
-			<li>basic support for modifiers highlighting</li>
-			<li>container modifier's argument is treated as ClassName</li>
-			<li>updated modifier names for ORM 2.0</li>
-		</ul>
-		<p>0.1.0</p>
-		<ul>
-			<li>basic support for ORM Entity getters/setters generation</li>
-			<li>completion for modifier names</li>
 		</ul>
 	]]></change-notes>
 
