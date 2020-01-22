@@ -13,27 +13,32 @@
 		</ul>
 	]]></change-notes>
 
-	<idea-version since-build="191.6183"/>
+	<idea-version since-build="193"/>
 
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.jetbrains.php</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<completion.contributor
-			language="PHP"
-			implementationClass="org.nextras.orm.intellij.completion.OrmCompletionContributor"/>
-		<lang.parserDefinition
-			language="PHP"
-			implementationClass="org.nextras.orm.intellij.parser.PhpParserDefinition"
-			order="first"/>
-		<annotator
-			language="PHP"
-			implementationClass="org.nextras.orm.intellij.annotator.ModifierHighlighterAnnotator"/>
-		<colorSettingsPage implementation="org.nextras.orm.intellij.annotator.highlighter.ModifierHighlighterSettings"/>
 		<psi.referenceContributor
 			language="PHP"
 			implementation="org.nextras.orm.intellij.reference.OrmReferenceContributor"/>
+
+		<completion.contributor
+			language="PHP"
+			implementationClass="org.nextras.orm.intellij.completion.OrmCompletionContributor"/>
+
+		<annotator
+			language="PHP"
+			implementationClass="org.nextras.orm.intellij.annotator.ModifierHighlighterAnnotator"/>
+
+		<codeInsight.lineMarkerProvider
+			language="PHP"
+			implementationClass="org.nextras.orm.intellij.marker.RepositoryMapperMethodMarkerProvider"/>
+
+		<colorSettingsPage implementation="org.nextras.orm.intellij.annotator.highlighter.ModifierHighlighterSettings"/>
+
 		<referencesSearch implementation="org.nextras.orm.intellij.reference.ReferenceSearcher"/>
+
 		<localInspection
 			language="PHP"
 			implementationClass="org.nextras.orm.intellij.inspection.ReadOnlyPropertyInspection"
@@ -42,10 +47,8 @@
 			displayName="Read only property check"
 			groupName="Nextras"
 			level="WARNING"/>
-		<codeInsight.lineMarkerProvider
-			language="PHP"
-			implementationClass="org.nextras.orm.intellij.marker.RepositoryMapperMethodMarkerProvider"/>
 	</extensions>
+
 	<extensions defaultExtensionNs="com.jetbrains.php">
 		<typeProvider4 implementation="org.nextras.orm.intellij.typeProvider.PersistenceMethodsTypeProvider"/>
 		<typeProvider4 implementation="org.nextras.orm.intellij.typeProvider.CollectionTypeProvider"/>
@@ -59,6 +62,7 @@
 			description="Generate ORM Setters">
 			<add-to-group group-id="GenerateGroup" anchor="first"/>
 		</action>
+
 		<action
 			id="ormGenerateGettersSettersAction"
 			class="org.nextras.orm.intellij.actions.generation.GenerateGettersSettersAction"
@@ -66,6 +70,7 @@
 			description="Generate ORM Getters and Setters">
 			<add-to-group group-id="GenerateGroup" anchor="first"/>
 		</action>
+
 		<action
 			id="ormGenerateGettersAction"
 			class="org.nextras.orm.intellij.actions.generation.GenerateGettersAction"

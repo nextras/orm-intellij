@@ -7,7 +7,21 @@ import com.jetbrains.php.lang.parser.PhpElementTypes
 
 class OrmReferenceContributor : PsiReferenceContributor() {
 	override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
-		psiReferenceRegistrar.registerReferenceProvider(PlatformPatterns.psiElement(PhpElementTypes.STRING), SetValueReferenceProvider())
-		psiReferenceRegistrar.registerReferenceProvider(PlatformPatterns.psiElement(PhpElementTypes.STRING), CollectionPropertyReferenceProvider())
+		psiReferenceRegistrar.registerReferenceProvider(
+			ModifierClassNameProvider.PATTERN,
+			ModifierClassNameProvider()
+		)
+		psiReferenceRegistrar.registerReferenceProvider(
+			ModifierClassPropertyProvider.PATTERN,
+			ModifierClassPropertyProvider()
+		)
+		psiReferenceRegistrar.registerReferenceProvider(
+			PlatformPatterns.psiElement(PhpElementTypes.STRING),
+			SetValueReferenceProvider()
+		)
+		psiReferenceRegistrar.registerReferenceProvider(
+			PlatformPatterns.psiElement(PhpElementTypes.STRING),
+			CollectionPropertyReferenceProvider()
+		)
 	}
 }
