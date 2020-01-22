@@ -1,7 +1,10 @@
 package org.nextras.orm.intellij.utils
 
+import com.intellij.psi.PsiElement
 import com.jetbrains.php.PhpIndex
+import com.jetbrains.php.codeInsight.PhpCodeInsightUtil
 import com.jetbrains.php.lang.psi.elements.PhpClass
+import com.jetbrains.php.lang.psi.elements.PhpNamespace
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import java.util.*
 
@@ -40,5 +43,28 @@ object PhpIndexUtils {
 			classes.addAll(getByType(el.type, phpIndex, visited.toMutableSet(), phpIndexVisited, phpIndexDepth))
 		}
 		return classes
+	}
+
+	fun getFqnForClassNameByContext(psiElement: PsiElement, className: String): String? {
+		val scope = PhpCodeInsightUtil.findScopeForUseOperator(psiElement) ?: return null
+
+		val useImports = mutableMapOf<String?, String?>()
+		for (phpUseList in PhpCodeInsightUtil.collectImports(scope)) {
+			for (phpUse in phpUseList.declarations) {
+				val alias = phpUse.aliasName
+				if (alias != null) {
+					useImports[alias] = phpUse.fqn
+				} else {
+					useImports[phpUse.name] = phpUse.fqn
+				}
+			}
+		}
+
+		return if (useImports.containsKey(className)) {
+			useImports[className]
+		} else {
+			val namespace = scope as? PhpNamespace ?: return null
+			namespace.fqn + "\\" + className
+		}
 	}
 }
