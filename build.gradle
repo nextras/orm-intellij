@@ -21,8 +21,8 @@ sourceSets {
 }
 
 intellij {
-	version '2019.1'
-	plugins = ["com.jetbrains.php:191.6183.95"]
+	version '2019.3'
+	plugins = ["com.jetbrains.php:193.5233.101"]
 	updateSinceUntilBuild false
 	downloadSources true
 	alternativeIdePath = 'C:\\dev\\jetbrains\\apps\\PhpStorm\\ch-0\\193.5233.101\\'
