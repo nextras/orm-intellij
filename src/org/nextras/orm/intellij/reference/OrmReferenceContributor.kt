@@ -12,6 +12,10 @@ class OrmReferenceContributor : PsiReferenceContributor() {
 			ModifierClassNameProvider()
 		)
 		psiReferenceRegistrar.registerReferenceProvider(
+			ModifierClassPropertyProvider.PATTERN,
+			ModifierClassPropertyProvider()
+		)
+		psiReferenceRegistrar.registerReferenceProvider(
 			PlatformPatterns.psiElement(PhpElementTypes.STRING),
 			SetValueReferenceProvider()
 		)
