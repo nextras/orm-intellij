@@ -9,7 +9,9 @@
 
 	<change-notes><![CDATA[
 		<ul>
-			<li>fixed (opened) compatibility with IDEs 2019.2+</li>
+			<li>reworked plug-in implementation to do not mess with PHP parser</li>
+			<li>implemented reference contributor for entity property in relationship modifier</li>
+			<li>fixed compatibility with 2019.3+</li>
 		</ul>
 	]]></change-notes>
 
