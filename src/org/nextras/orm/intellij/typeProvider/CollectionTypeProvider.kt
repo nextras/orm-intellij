@@ -65,7 +65,11 @@ class CollectionTypeProvider : PhpTypeProvider4 {
 		val index = PhpIndex.getInstance(project)
 		val types = PhpIndexUtils.getByType(PhpType().add(refSig), index, visited, depth)
 
-		if (types.any { OrmUtils.OrmClass.HAS_MANY.`is`(it, index) } && methodName == "get" && refSig.startsWith("#")) {
+		if (
+			types.any { OrmUtils.OrmClass.HAS_MANY.`is`(it, index) }
+			&& (methodName == "get" || methodName == "toCollection")
+			&& refSig.startsWith("#")
+		) {
 			result.addAll(
 				PhpIndexUtils.getByType(
 					PhpType().add(PhpTypeSignatureKey.ARRAY_ELEMENT.sign(refSig)),
