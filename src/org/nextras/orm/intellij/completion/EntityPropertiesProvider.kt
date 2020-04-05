@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.util.PsiTreeUtil
+import com.jetbrains.php.PhpIcons
 import com.jetbrains.php.lang.parser.PhpElementTypes
 import com.jetbrains.php.lang.psi.elements.Method
 import com.jetbrains.php.lang.psi.elements.MethodReference
@@ -56,14 +57,23 @@ class EntityPropertiesProvider {
 
 					result.addElement(
 						LookupElementBuilder.create(strPath)
+							.withIcon(PhpIcons.FIELD_ICON)
 							.withPresentableText(fieldName)
 							.withTypeText(types.joinToString("|"))
 					)
 				}
 
 				if (path.size == 1) {
-					result.addElement(LookupElementBuilder.create("this").withTypeText(cls.type.toString()))
-					result.addElement(LookupElementBuilder.create(cls.fqn).withTypeText(cls.type.toString()))
+					result.addElement(
+						LookupElementBuilder.create("this")
+							.withIcon(PhpIcons.CLASS_ICON)
+							.withTypeText(cls.type.toString())
+					)
+					result.addElement(
+						LookupElementBuilder.create(cls.fqn)
+							.withIcon(PhpIcons.CLASS_ICON)
+							.withTypeText(cls.type.toString())
+					)
 				}
 			}
 	}
