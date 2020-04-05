@@ -9,9 +9,9 @@
 
 	<change-notes><![CDATA[
 		<ul>
-			<li>reworked plug-in implementation to do not mess with PHP parser</li>
-			<li>implemented reference contributor for entity property in relationship modifier</li>
-			<li>fixed compatibility with 2019.3+</li>
+			<li>add icons in property auto-completion</li>
+			<li>Orm 4: HasManyCollection::toCollection() support</li>
+			<li>Orm 4: new collection methods getByChecked(), getByIdChecked()</li>
 		</ul>
 	]]></change-notes>
 
