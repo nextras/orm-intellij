@@ -37,8 +37,8 @@ class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
 			&& el.parent.parent.parent.parent is MethodReference
 		) {
 			val ref = el.parent.parent.parent.parent as MethodReference
-			return when {
-				ref.name == "findBy" || ref.name == "getBy" -> ref
+			return when (ref.name) {
+				"findBy", "getBy", "getByChecked" -> ref
 				else -> null
 			}
 		}
@@ -50,8 +50,8 @@ class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
 			&& el.parent.parent.parent.parent.parent is MethodReference
 		) {
 			val ref = el.parent.parent.parent.parent.parent as MethodReference
-			return when {
-				ref.name == "findBy" || ref.name == "getBy" -> ref
+			return when (ref.name) {
+				"findBy", "getBy", "getByChecked" -> ref
 				else -> null
 			}
 		}

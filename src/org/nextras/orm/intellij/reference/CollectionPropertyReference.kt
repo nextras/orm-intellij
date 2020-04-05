@@ -16,7 +16,7 @@ class CollectionPropertyReference(
 	parts: Array<String>,
 	private val pos: Int
 ) : PsiPolyVariantReferenceBase<StringLiteralExpression>(element) {
-	private val parts: Array<String> = Arrays.copyOfRange(parts, 0, pos + 1)
+	private val parts: Array<String> = parts.copyOfRange(0, pos + 1)
 
 	init {
 		val end = this.parts.joinToString("->").length + 1

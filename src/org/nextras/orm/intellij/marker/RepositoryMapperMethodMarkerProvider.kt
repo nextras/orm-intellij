@@ -41,6 +41,6 @@ class RepositoryMapperMethodMarkerProvider : RelatedItemLineMarkerProvider() {
 	}
 
 	companion object {
-		private val baseMethods = hashSetOf("findAll", "findBy", "findById", "getBy", "getById")
+		private val baseMethods = hashSetOf("findAll", "findBy", "findById", "getBy", "getByChecked", "getById", "getByIdChecked")
 	}
 }

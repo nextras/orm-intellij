@@ -24,7 +24,13 @@ class EntityPropertiesProvider {
 		val context = parameterList.context as? MethodReference ?: return
 		val method = context.resolve() as? Method ?: return
 
-		if (!(method.name == "findBy" || method.name == "getBy" || method.name == "orderBy")) {
+		if (!(
+				method.name == "findBy"
+					|| method.name == "getBy"
+					|| method.name == "getByChecked"
+					|| method.name == "orderBy"
+				)
+		) {
 			return
 		}
 

@@ -24,12 +24,17 @@ class CollectionTypeProvider : PhpTypeProvider4 {
 		if (element.classReference == null) {
 			return null
 		}
-		if (!pluralMethods.contains(element.name) && !singularMethods.contains(element.name)) {
+		if (
+			!pluralMethods.contains(element.name)
+			&& !nullableSingularMethods.contains(element.name)
+			&& !nonNullableSingularMethods.contains(element.name)
+		) {
 			return null
 		}
 
 		val arraySuffix = when {
 			pluralMethods.contains(element.name) -> "[]"
+			nullableSingularMethods.contains(element.name) -> "|null"
 			else -> ""
 		}
 		val type = element.classReference!!.type
@@ -94,6 +99,7 @@ class CollectionTypeProvider : PhpTypeProvider4 {
 
 	companion object {
 		private val pluralMethods = setOf("findBy", "orderBy", "limitBy", "fetchAll", "findAll", "findById", "get")
-		private val singularMethods = setOf("fetch", "getBy", "getById")
+		private val nullableSingularMethods = setOf("fetch", "getBy", "getById")
+		private val nonNullableSingularMethods = setOf("getByChecked", "getByIdChecked")
 	}
 }
