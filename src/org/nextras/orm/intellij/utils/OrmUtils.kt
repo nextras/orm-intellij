@@ -14,7 +14,7 @@ object OrmUtils {
 		REPOSITORY("\\Nextras\\Orm\\Repository\\IRepository"),
 		ENTITY("\\Nextras\\Orm\\Entity\\IEntity"),
 		HAS_MANY("\\Nextras\\Orm\\Relationships\\HasMany"),
-		EMBEDDABLE("\\Nextras\")
+		EMBEDDABLE("\\Nextras\\Orm\\Entity\\Embeddable\\IEmbeddable");
 
 		fun `is`(cls: PhpClass, index: PhpIndex): Boolean {
 			val classes = index.getAnyByFQN(className)
@@ -86,7 +86,11 @@ object OrmUtils {
 			}
 			val typeWithoutArray = PhpType().add(type.substring(0, type.length - 2))
 			val maybeEntities = PhpIndexUtils.getByType(typeWithoutArray, phpIndex)
-			entities.addAll(maybeEntities.filter { cls -> OrmClass.ENTITY.`is`(cls, phpIndex) })
+			entities.addAll(
+				maybeEntities.filter { cls ->
+					OrmClass.ENTITY.`is`(cls, phpIndex)
+				}
+			)
 		}
 
 		return entities
@@ -158,7 +162,7 @@ object OrmUtils {
 				type
 			}
 			for (entityCls in PhpIndexUtils.getByType(PhpType().add(addType), index)) {
-				if (!OrmClass.ENTITY.`is`(entityCls, index)) {
+				if (!OrmClass.ENTITY.`is`(entityCls, index) && !OrmClass.EMBEDDABLE.`is`(entityCls, index)) {
 					continue
 				}
 				entities.add(entityCls)
