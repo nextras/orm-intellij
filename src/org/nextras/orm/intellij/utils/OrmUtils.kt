@@ -13,7 +13,8 @@ object OrmUtils {
 		MAPPER("\\Nextras\\Orm\\Mapper\\IMapper"),
 		REPOSITORY("\\Nextras\\Orm\\Repository\\IRepository"),
 		ENTITY("\\Nextras\\Orm\\Entity\\IEntity"),
-		HAS_MANY("\\Nextras\\Orm\\Relationships\\HasMany");
+		HAS_MANY("\\Nextras\\Orm\\Relationships\\HasMany"),
+		EMBEDDABLE("\\Nextras\")
 
 		fun `is`(cls: PhpClass, index: PhpIndex): Boolean {
 			val classes = index.getAnyByFQN(className)
