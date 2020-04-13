@@ -1,5 +1,6 @@
 package org.nextras.orm.intellij.utils
 
+import com.intellij.openapi.project.Project
 import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty
 import com.jetbrains.php.lang.psi.elements.*
@@ -22,6 +23,19 @@ object OrmUtils {
 			} ?: return false
 			return instanceOf.type.isConvertibleFrom(cls.type, index)
 		}
+	}
+
+	private var isV3: Boolean? = null
+
+	fun isV3(project: Project): Boolean {
+		val index = PhpIndex.getInstance(project)
+		if (isV3 != null) {
+			return isV3!!
+		}
+
+		val collectionFunction = index.getInterfacesByFQN("\\Nextras\\Orm\\Collection\\Functions\\IArrayFunction")
+		isV3 = collectionFunction.isEmpty()
+		return isV3!!
 	}
 
 	fun findRepositoryEntities(repositories: Collection<PhpClass>): Collection<PhpClass> {
@@ -77,16 +91,12 @@ object OrmUtils {
 		return entities
 	}
 
-	fun findQueriedEntities(reference: MethodReference, path: Array<String>): Collection<PhpClass> {
-		if (path.isEmpty()) {
-			return emptyList()
-		}
-		val rootEntities: Collection<PhpClass>
-		if (path.size == 1 || path[0] == "this") {
-			rootEntities = findQueriedEntities(reference)
+	fun findQueriedEntities(reference: MethodReference, cls: String?, path: Array<String>): Collection<PhpClass> {
+		val rootEntities = if (cls == null || cls == "this") {
+			findQueriedEntities(reference)
 		} else {
 			val index = PhpIndex.getInstance(reference.project)
-			rootEntities = PhpIndexUtils.getByType(PhpType().add(path[0]), index)
+			PhpIndexUtils.getByType(PhpType().add(cls), index)
 		}
 
 		if (rootEntities.isEmpty()) {
@@ -95,7 +105,31 @@ object OrmUtils {
 
 		return when {
 			path.size <= 1 -> rootEntities
-			else -> findTargetEntities(rootEntities, path, 1)
+			else -> findTargetEntities(rootEntities, path, 0)
+		}
+	}
+
+	fun parsePathExpression(expression: String, isV3: Boolean): Pair<String?, Array<String>> {
+		if (isV3) {
+			val path = expression.split("->")
+			return when (path.size > 1) {
+				true -> Pair(
+					path.first(),
+					path.drop(1).toTypedArray()
+				)
+				false -> Pair(
+					null,
+					path.toTypedArray()
+				)
+			}
+		} else {
+			val delimiterPos = expression.indexOf("::")
+			val sourceClass = expression.substring(0, delimiterPos.coerceAtLeast(0))
+			val path = if (delimiterPos == -1) expression else expression.substring((delimiterPos + 2).coerceAtMost(expression.length))
+			return Pair(
+				sourceClass.ifEmpty { null },
+				path.split("->").toTypedArray()
+			)
 		}
 	}
 

@@ -8,13 +8,13 @@ import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import org.nextras.orm.intellij.utils.OrmUtils
 
-class CollectionClassReference(
+class CollectionClassReference constructor(
 	psiElement: StringLiteralExpression,
 	private val methodReference: MethodReference,
 	private val name: String
 ) : PsiPolyVariantReferenceBase<StringLiteralExpression>(psiElement, TextRange(1, name.length + 1)) {
 	override fun multiResolve(b: Boolean): Array<ResolveResult> {
-		val classes = OrmUtils.findQueriedEntities(methodReference, arrayOf(name))
+		val classes = OrmUtils.findQueriedEntities(methodReference, name, arrayOf())
 		return classes.map {
 			object : ResolveResult {
 				override fun getElement(): PsiElement? {
