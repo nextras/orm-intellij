@@ -10,8 +10,10 @@
 	<change-notes><![CDATA[
 		<ul>
 			<li>add icons in property auto-completion</li>
+			<li>better auto-completion for collection when cursor is not at the end</li>
 			<li>Orm 4: HasManyCollection::toCollection() support</li>
-			<li>Orm 4: new collection methods getByChecked(), getByIdChecked()</li>
+			<li>Orm 4: [IRepository|ICollection]::getByChecked(), ::getByIdChecked() support</li>
+			<li>Orm 4: embeddable support - property modifier & collection auto-completion</li>
 		</ul>
 	]]></change-notes>
 
