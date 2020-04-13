@@ -37,10 +37,10 @@ object PhpIndexUtils {
 		return classes
 	}
 
-	private fun getBySignature(sig: String, phpIndex: PhpIndex, visited: Set<String>, phpIndexVisited: Set<String>?, phpIndexDepth: Int): Collection<PhpClass> {
+	private fun getBySignature(sig: String, phpIndex: PhpIndex, visited: MutableSet<String>, phpIndexVisited: Set<String>?, phpIndexDepth: Int): Collection<PhpClass> {
 		val classes = HashSet<PhpClass>()
 		for (el in phpIndex.getBySignature(sig)) {
-			classes.addAll(getByType(el.type, phpIndex, visited.toMutableSet(), phpIndexVisited, phpIndexDepth))
+			classes.addAll(getByType(el.type, phpIndex, visited, phpIndexVisited, phpIndexDepth))
 		}
 		return classes
 	}

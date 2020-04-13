@@ -37,7 +37,7 @@ class PersistenceMethodsTypeProvider : PhpTypeProvider4 {
 		}
 	}
 
-	override fun complete(expression: String?, project: Project?): PhpType? {
+	override fun complete(expression: String, project: Project): PhpType? {
 		return null
 	}
 
