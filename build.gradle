@@ -25,7 +25,7 @@ intellij {
 	plugins = ["com.jetbrains.php:193.5233.101"]
 	updateSinceUntilBuild false
 	downloadSources true
-	alternativeIdePath = 'C:\\dev\\jetbrains\\apps\\PhpStorm\\ch-0\\193.5233.101\\'
+	alternativeIdePath = 'C:\\dev\\jetbrains\\apps\\PhpStorm\\ch-0\\193.6911.26\\'
 }
 
 compileKotlin {
