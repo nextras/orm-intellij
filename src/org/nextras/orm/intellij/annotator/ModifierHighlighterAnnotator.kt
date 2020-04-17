@@ -2,6 +2,7 @@ package org.nextras.orm.intellij.annotator
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
+import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.jetbrains.php.lang.documentation.phpdoc.lexer.PhpDocTokenTypes
@@ -26,15 +27,35 @@ class ModifierHighlighterAnnotator : Annotator {
 			if (element.node.elementType == PhpDocTokenTypes.DOC_LBRACE) {
 				isModifier = true
 				isModifierName = true
-				annotationHolder.createInfoAnnotation(element, null).textAttributes = ModifierHighlighter.BRACES
+				annotationHolder
+					.newSilentAnnotation(HighlightSeverity.INFORMATION)
+					.range(element)
+					.textAttributes(ModifierHighlighter.BRACES)
+					.create()
+
 			} else if (element.node.elementType == PhpDocTokenTypes.DOC_RBRACE) {
 				isModifier = false
-				annotationHolder.createInfoAnnotation(element, null).textAttributes = ModifierHighlighter.BRACES
+				annotationHolder
+					.newSilentAnnotation(HighlightSeverity.INFORMATION)
+					.range(element)
+					.textAttributes(ModifierHighlighter.BRACES)
+					.create()
+
 			} else if (isModifier) {
 				if (isModifierName && element !is PsiWhiteSpace) {
-					annotationHolder.createInfoAnnotation(element, null).textAttributes = ModifierHighlighter.MODIFIER
+					annotationHolder
+						.newSilentAnnotation(HighlightSeverity.INFORMATION)
+						.range(element)
+						.textAttributes(ModifierHighlighter.MODIFIER)
+						.create()
+
 				} else if (!isModifierName && (element.node.elementType == PhpDocTokenTypes.DOC_IDENTIFIER || element.node.elementType == PhpDocTokenTypes.DOC_VARIABLE)) {
-					annotationHolder.createInfoAnnotation(element, null).textAttributes = ModifierHighlighter.IDENTIFIER
+					annotationHolder
+						.newSilentAnnotation(HighlightSeverity.INFORMATION)
+						.range(element)
+						.textAttributes(ModifierHighlighter.IDENTIFIER)
+						.create()
+
 				} else {
 					isModifierName = false
 				}
