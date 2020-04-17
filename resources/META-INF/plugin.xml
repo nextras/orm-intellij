@@ -9,6 +9,7 @@
 
 	<change-notes><![CDATA[
 		<ul>
+			<li>support for 2020.1+ - fixed support and optimized collection type resolution</li>
 			<li>add icons in property auto-completion</li>
 			<li>better auto-completion for collection when cursor is not at the end</li>
 			<li>Orm 4: HasManyCollection::toCollection() support</li>

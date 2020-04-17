@@ -3,8 +3,10 @@ package org.nextras.orm.intellij.typeProvider
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.jetbrains.php.PhpIndex
+import com.jetbrains.php.lang.psi.elements.FieldReference
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.PhpNamedElement
+import com.jetbrains.php.lang.psi.elements.Variable
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeSignatureKey
@@ -26,16 +28,53 @@ class CollectionTypeProvider : PhpTypeProvider4 {
 			return null
 		}
 
-		val objectTypeGeneral = element.classReference!!.type
-		val objectTypes = objectTypeGeneral.filterMixed().filterNull().filterPrimitives().types
-		val objectTypesFiltered = objectTypes.filterNot { it.startsWith("#V") } // filter out PhpTypeSignatureKey.VARIABLE
-		val arraySuffix = if (pluralMethods.contains(methodName)) "[]" else ""
+		val isPluralMethod = pluralMethods.contains(methodName)
+		val arraySuffix = if (isPluralMethod) "[]" else ""
 
-		val resultType = PhpType()
-		objectTypesFiltered.forEach { objectType ->
-			resultType.add("#$key$objectType.$methodName$arraySuffix")
+		@Suppress("MoveVariableDeclarationIntoWhen")
+		val parent = element.classReference!!
+		when (parent) {
+			is MethodReference -> {
+				val type = PhpType()
+				parent.type.types
+					.filter { it.startsWith("#$key") } // we propagate further only our signature
+					.forEach { subType ->
+						if (!isPluralMethod) {
+							type.add(subType.removeSuffix("[]"))
+						} else {
+							type.add(subType)
+						}
+					}
+				return type
+			}
+			is FieldReference -> {
+				if (!parent.resolveLocalType().isEmpty) {
+					return PhpType().add("#$key${parent.signature}$arraySuffix")
+				}
+				// allowed type -> general processing
+			}
+			is Variable -> {
+				// allowed type -> general processing
+			}
+			else -> {
+				return null
+			}
 		}
-		return resultType
+
+		val type = PhpType()
+		parent.type.types
+			.forEach { subType ->
+				if (subType.startsWith("#$key")) {
+					if (!isPluralMethod) {
+						type.add(subType.removeSuffix("[]"))
+					} else {
+						type.add(subType)
+					}
+				} else {
+					type.add("#$key${subType.removeSuffix("[]")}$arraySuffix")
+				}
+			}
+		return type
 	}
 
 	override fun complete(expression: String, project: Project): PhpType? {
@@ -47,37 +86,28 @@ class CollectionTypeProvider : PhpTypeProvider4 {
 			return null
 		}
 
-		val pos = expression.lastIndexOf(".")
-		var refSignature = expression.substring(0, pos)
-		if (refSignature.endsWith("[]")) {
-			refSignature = refSignature.substring(0, refSignature.length - 2)
-		}
-		var methodName = expression.substring(pos + 1)
-		if (methodName.endsWith("[]")) {
-			methodName = methodName.substring(0, methodName.length - 2)
-		}
-
 		val index = PhpIndex.getInstance(project)
-		val classTypes = PhpIndexUtils.getByType(PhpType().add(refSignature), index)
+		val classTypes = PhpIndexUtils.getByType(PhpType().add(expression), index)
+		if (classTypes.isEmpty()) {
+			return null
+		}
 
 		// $orm->books->getById()
 		val repoClassesList = classTypes.filter { OrmUtils.OrmClass.REPOSITORY.`is`(it, index) }
-		if (repoClassesList.isNotEmpty() && collectionMethods.contains(methodName)) {
+		if (repoClassesList.isNotEmpty()) {
 			return OrmUtils.findRepositoryEntities(repoClassesList);
 		}
 
 		// $books->tags->toCollection()->getById()
 		val hasHasManyType = classTypes.any { OrmUtils.OrmClass.HAS_MANY.`is`(it, index) }
-		if (hasHasManyType && relationshipMethods.contains(methodName) && refSignature.startsWith("#")) {
-			val arrayElementType = PhpType().add(PhpTypeSignatureKey.ARRAY_ELEMENT.sign(refSignature))
+		if (hasHasManyType && expression.startsWith("#")) {
+			val arrayElementType = PhpType().add(PhpTypeSignatureKey.ARRAY_ELEMENT.sign(expression))
 			return PhpIndexUtils.getByType(arrayElementType, index, visited, depth)
 		}
 
-		// $presenter->myCollection->getById()
-		// unable to check here that is called on ICollection, probably complete() is needed to provide such
-		// behavior
+		// $myCollection->getById()
 		val entityClassesList = classTypes.filter { OrmUtils.OrmClass.ENTITY.`is`(it, index) }
-		if (entityClassesList.isNotEmpty() && collectionMethods.contains(methodName)) {
+		if (entityClassesList.isNotEmpty()) {
 			return entityClassesList
 		}
 
