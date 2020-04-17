@@ -17,7 +17,7 @@
 		</ul>
 	]]></change-notes>
 
-	<idea-version since-build="193"/>
+	<idea-version since-build="201.3119"/>
 
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.jetbrains.php</depends>
