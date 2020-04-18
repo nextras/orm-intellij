@@ -60,28 +60,25 @@
 	</extensions>
 
 	<actions>
-		<action
-			id="ormGenerateSettersAction"
-			class="org.nextras.orm.intellij.actions.generation.GenerateSettersAction"
-			text="ORM Setters..."
-			description="Generate ORM Setters">
+		<group id="org.nextras.orm.intellij.generate">
 			<add-to-group group-id="GenerateGroup" anchor="first"/>
-		</action>
+			<action
+				id="ormGenerateSettersAction"
+				class="org.nextras.orm.intellij.actions.generation.GenerateSettersAction"
+				text="Orm Setters..."
+				description="Generate Orm setters"/>
 
-		<action
-			id="ormGenerateGettersSettersAction"
-			class="org.nextras.orm.intellij.actions.generation.GenerateGettersSettersAction"
-			text="ORM Getters and Setters..."
-			description="Generate ORM Getters and Setters">
-			<add-to-group group-id="GenerateGroup" anchor="first"/>
-		</action>
+			<action
+				id="ormGenerateGettersSettersAction"
+				class="org.nextras.orm.intellij.actions.generation.GenerateGettersSettersAction"
+				text="Orm Getters and Setters..."
+				description="Generate Orm getters and setters"/>
 
-		<action
-			id="ormGenerateGettersAction"
-			class="org.nextras.orm.intellij.actions.generation.GenerateGettersAction"
-			text="ORM Getters..."
-			description="Generate ORM Getters">
-			<add-to-group group-id="GenerateGroup" anchor="first"/>
-		</action>
+			<action
+				id="ormGenerateGettersAction"
+				class="org.nextras.orm.intellij.actions.generation.GenerateGettersAction"
+				text="Orm Getters..."
+				description="Generate Orm getters"/>
+		</group>
 	</actions>
 </idea-plugin>
