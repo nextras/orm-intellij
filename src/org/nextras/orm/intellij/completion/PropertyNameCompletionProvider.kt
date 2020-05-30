@@ -5,6 +5,7 @@ import com.intellij.codeInsight.completion.CompletionProvider
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
+import com.jetbrains.php.PhpIcons
 import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty
 import com.jetbrains.php.lang.psi.elements.MethodReference
@@ -38,7 +39,9 @@ class PropertyNameCompletionProvider : CompletionProvider<CompletionParameters>(
 			.filterIsInstance<PhpDocProperty>()
 			.forEach {
 				result.addElement(
-					LookupElementBuilder.create(it.name).withTypeText(it.type.toString())
+					LookupElementBuilder.create(it.name)
+						.withIcon(PhpIcons.FIELD_ICON)
+						.withTypeText(it.type.toString())
 				)
 			}
 	}
