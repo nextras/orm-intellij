@@ -14,7 +14,7 @@ class OrmCompletionContributor : CompletionContributor() {
 
 	init {
 		extend(CompletionType.BASIC, ModifiersPatterns.modifierPattern, ModifiersProvider())
-		extend(CompletionType.BASIC, PlatformPatterns.psiElement().withParent(StringLiteralExpression::class.java), SetValueCompletionProvider())
+		extend(CompletionType.BASIC, PlatformPatterns.psiElement().withParent(StringLiteralExpression::class.java), PropertyNameCompletionProvider())
 		extend(CompletionType.BASIC, PlatformPatterns.psiElement().withParent(ConstantReference::class.java).withSuperParent(3, GroupStatement::class.java), SetReadOnlyValueCompletionProvider())
 	}
 

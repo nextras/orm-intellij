@@ -12,7 +12,7 @@ import com.jetbrains.php.lang.psi.elements.ParameterList
 import org.nextras.orm.intellij.utils.OrmUtils
 import org.nextras.orm.intellij.utils.PhpIndexUtils
 
-class SetValueCompletionProvider : CompletionProvider<CompletionParameters>() {
+class PropertyNameCompletionProvider : CompletionProvider<CompletionParameters>() {
 	override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet) {
 		val el = parameters.position
 

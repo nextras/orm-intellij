@@ -7,7 +7,7 @@ import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 
-class SetValueReferenceProvider : PsiReferenceProvider() {
+class PropertyNameReferenceProvider : PsiReferenceProvider() {
 	override fun getReferencesByElement(el: PsiElement, processingContext: ProcessingContext): Array<PsiReference> {
 		assert(el is StringLiteralExpression)
 		val method = el.parent?.parent as? MethodReference ?: return emptyArray()
