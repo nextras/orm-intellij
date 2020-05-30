@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="14">
+    <bytecodeTargetLevel target="12">
       <module name="nextras-orm-plugin.main" target="1.8" />
       <module name="nextras-orm-plugin.test" target="1.8" />
-      <module name="orm-intellij" target="12" />
-      <module name="orm-intellij.main" target="12" />
-      <module name="orm-intellij.test" target="12" />
     </bytecodeTargetLevel>
   </component>
 </project>
