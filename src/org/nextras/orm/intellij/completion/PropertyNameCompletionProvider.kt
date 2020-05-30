@@ -13,6 +13,10 @@ import org.nextras.orm.intellij.utils.OrmUtils
 import org.nextras.orm.intellij.utils.PhpIndexUtils
 
 class PropertyNameCompletionProvider : CompletionProvider<CompletionParameters>() {
+	companion object {
+		private val METHODS = arrayOf("setValue", "setReadOnlyValue", "getValue", "getProperty", "getRawProperty")
+	}
+
 	override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet) {
 		val el = parameters.position
 
@@ -21,7 +25,7 @@ class PropertyNameCompletionProvider : CompletionProvider<CompletionParameters>(
 		}
 
 		val methodReference = el.parent?.parent?.parent as? MethodReference ?: return
-		if (methodReference.name != "setValue" && methodReference.name != "setReadOnlyValue") {
+		if (methodReference.name !in METHODS) {
 			return
 		}
 

@@ -13,8 +13,12 @@ class PropertyNameReferenceProvider : PsiReferenceProvider() {
 		val method = el.parent?.parent as? MethodReference ?: return emptyArray()
 
 		return when (method.name) {
-			"setValue", "setReadOnlyValue" -> arrayOf(EntityPropertyReference(el as StringLiteralExpression))
-			else -> emptyArray()
+			"setValue", "setReadOnlyValue", "getValue", "getProperty", "getRawProperty" -> {
+				arrayOf(EntityPropertyReference(el as StringLiteralExpression))
+			}
+			else -> {
+				emptyArray()
+			}
 		}
 	}
 }

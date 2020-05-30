@@ -20,12 +20,7 @@
 
 	<change-notes><![CDATA[
 		<ul>
-			<li>support for 2020.1+ - fixed support and optimized collection type resolution</li>
-			<li>add icons in property auto-completion</li>
-			<li>better auto-completion for collection when cursor is not at the end</li>
-			<li>Orm 4: HasManyCollection::toCollection() support</li>
-			<li>Orm 4: [IRepository|ICollection]::getByChecked(), ::getByIdChecked() support</li>
-			<li>Orm 4: embeddable support - property modifier & collection auto-completion</li>
+			<li>added auto completion & reference to entity properties in getValue() and getProperty() methods</li>
 		</ul>
 	]]></change-notes>
 

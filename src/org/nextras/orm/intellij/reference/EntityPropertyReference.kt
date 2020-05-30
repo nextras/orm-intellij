@@ -16,8 +16,6 @@ class EntityPropertyReference(psiElement: StringLiteralExpression) : PsiPolyVari
 		assert(expr.parent.parent != null)
 
 		val method = expr.parent.parent as MethodReference
-		assert(method.name != null && (method.name == "setValue" || method.name == "setReadOnlyValue"))
-
 		val phpIndex = PhpIndex.getInstance(this.element.project)
 		val result = PhpIndexUtils.getByType(method.classReference!!.type, phpIndex)
 		return result
