@@ -6,12 +6,11 @@ import com.intellij.openapi.options.colors.AttributesDescriptor
 import com.intellij.openapi.options.colors.ColorDescriptor
 import com.intellij.openapi.options.colors.ColorSettingsPage
 import com.jetbrains.php.lang.highlighter.PhpFileSyntaxHighlighter
-import org.nextras.orm.intellij.Icons
 import javax.swing.Icon
 
 class ModifierHighlighterSettings : ColorSettingsPage {
 	override fun getIcon(): Icon? {
-		return Icons.FILE
+		return null
 	}
 
 	override fun getHighlighter(): SyntaxHighlighter {
