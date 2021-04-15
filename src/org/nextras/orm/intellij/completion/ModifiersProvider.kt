@@ -33,7 +33,7 @@ class ModifiersProvider : CompletionProvider<CompletionParameters>() {
 	}
 
 	companion object {
-		var withParams = ModifierInsertHandler(true)
-		var withoutParams = ModifierInsertHandler(false)
+		private val withParams = ModifierInsertHandler(true)
+		private val withoutParams = ModifierInsertHandler(false)
 	}
 }
