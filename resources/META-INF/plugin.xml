@@ -20,7 +20,7 @@
 
 	<change-notes><![CDATA[
 		<ul>
-			<li>added auto completion & reference to entity properties in getValue() and getProperty() methods</li>
+			<li>added auto completion & reference to entity properties in hasValue() method</li>
 		</ul>
 	]]></change-notes>
 

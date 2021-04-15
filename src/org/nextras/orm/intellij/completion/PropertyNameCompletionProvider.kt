@@ -15,7 +15,7 @@ import org.nextras.orm.intellij.utils.PhpIndexUtils
 
 class PropertyNameCompletionProvider : CompletionProvider<CompletionParameters>() {
 	companion object {
-		private val METHODS = arrayOf("setValue", "setReadOnlyValue", "getValue", "getProperty", "getRawProperty")
+		private val METHODS = arrayOf("setValue", "setReadOnlyValue", "getValue", "hasValue", "getProperty", "getRawProperty")
 	}
 
 	override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet) {
