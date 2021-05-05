@@ -10,18 +10,18 @@ import com.jetbrains.php.lang.psi.PhpPsiElementFactory
 import com.jetbrains.php.lang.psi.elements.Field
 import com.jetbrains.php.lang.psi.elements.PhpClass
 
-class GenerateGettersAction : CodeInsightAction() {
+class GenerateSettersAction : CodeInsightAction() {
 	private val actionHandler = object : GenerateActionHandler() {
 		override fun canShow(property: PhpDocProperty, phpClass: PhpClass): Boolean {
 			val name = property.name
-			val methodName = "getter" + name.substring(0, 1).toUpperCase() + name.substring(1)
+			val methodName = "setter" + name.substring(0, 1).uppercase() + name.substring(1)
 			val method = phpClass.findMethodByName(methodName)
 			return method == null
 		}
 
 		override fun createAccessors(field: Field, project: Project): String {
 			val name = field.name
-			val methodName = "getter" + name.substring(0, 1).toUpperCase() + name.substring(1)
+			val methodName = "setter" + name.substring(0, 1).uppercase() + name.substring(1)
 			val method = PhpPsiElementFactory.createMethod(project, "protected function $methodName(\$value) { return \$value; }")
 			return method.text
 		}
