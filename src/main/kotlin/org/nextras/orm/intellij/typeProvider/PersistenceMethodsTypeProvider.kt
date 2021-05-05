@@ -22,7 +22,7 @@ class PersistenceMethodsTypeProvider : PhpTypeProvider4 {
 		}
 
 		//cannot access index here, so just dummy check
-		val className = element.classReference!!.name!!.toLowerCase()
+		val className = element.classReference!!.name!!.lowercase()
 		if (!className.endsWith("model") && !className.endsWith("repository") && !className.endsWith("repositorycontainer")) {
 			return null
 		}

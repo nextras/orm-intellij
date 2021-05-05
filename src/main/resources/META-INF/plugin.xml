@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>org.nextras.orm.intellij</id>
 	<name>Nextras Orm</name>
-	<vendor url="https://www.nextras.org">Nextras</vendor>
+	<vendor url="https://nextras.org">Nextras</vendor>
 
 	<description><![CDATA[
 		<p>Provides support for <a href="https://github.com/nextras/orm/">Nextras ORM</a> &ndash; an ORM library for PHP.</p>
