@@ -44,13 +44,13 @@ object OrmUtils {
 		for (repositoryClass in repositories) {
 			val entityNamesMethod = repositoryClass.findMethodByName("getEntityClassNames") ?: return emptyList()
 			if (entityNamesMethod.lastChild !is GroupStatement) {
-				return emptyList()
+				continue
 			}
 			if ((entityNamesMethod.lastChild as GroupStatement).firstPsiChild !is PhpReturn) {
-				return emptyList()
+				continue
 			}
 			if ((entityNamesMethod.lastChild as GroupStatement).firstPsiChild!!.firstPsiChild !is ArrayCreationExpression) {
-				return emptyList()
+				continue
 			}
 
 			val arr = (entityNamesMethod.lastChild as GroupStatement).firstPsiChild!!.firstPsiChild as ArrayCreationExpression?
