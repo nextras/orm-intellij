@@ -1,6 +1,6 @@
 plugins {
-	id 'org.jetbrains.intellij' version '0.4.18'
-	id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+	id 'org.jetbrains.intellij' version '0.7.3'
+	id 'org.jetbrains.kotlin.jvm' version '1.5.0'
 }
 
 group 'org.nextras.orm.intellij'
@@ -25,7 +25,7 @@ intellij {
 	plugins = ["com.jetbrains.php:201.6668.153"]
 	updateSinceUntilBuild false
 	downloadSources true
-	alternativeIdePath = 'C:\\dev\\jetbrains\\apps\\PhpStorm\\ch-0\\201.7223.96\\'
+	alternativeIdePath = 'C:\\dev\\jetbrains\\apps\\PhpStorm\\ch-0\\211.7142.44\\'
 }
 
 compileKotlin {
