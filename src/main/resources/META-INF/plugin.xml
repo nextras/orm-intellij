@@ -3,29 +3,6 @@
 	<name>Nextras Orm</name>
 	<vendor url="https://nextras.org">Nextras</vendor>
 
-	<description><![CDATA[
-		<p>Provides support for <a href="https://github.com/nextras/orm/">Nextras ORM</a> &ndash; an ORM library for PHP.</p>
-		<br>
-		<p>
-			Supported features:
-			<ul>
-				<li>Entity modifiers highlighting - see clearly your modifiers;</li>
-				<li>Entity modifiers reference contributor - renames of property changes references to it in modifiers;</li>
-				<li>Entity setter & getter generator - helps you to create these methods;</li>
-				<li>Collection expression auto-completion - suggests entity properties and allow relationships traversing;</li>
-				<li>Collection & Repository entity type propagation - propagates specific entity types for find*, get*, and persisting methods;</li>
-			</ul>
-		</p>
-	]]></description>
-
-	<change-notes><![CDATA[
-		<ul>
-			<li>added auto completion & reference to entity properties in hasValue() method</li>
-		</ul>
-	]]></change-notes>
-
-	<idea-version since-build="201.3119"/>
-
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.jetbrains.php</depends>
 

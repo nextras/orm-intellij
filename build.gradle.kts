@@ -1,37 +1,79 @@
+import org.jetbrains.changelog.closure
+import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+fun properties(key: String) = project.findProperty(key).toString()
+
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.5.0"
-	id("org.jetbrains.intellij") version "0.7.3"
-	id("org.jetbrains.changelog") version "1.1.2"
+    id("org.jetbrains.kotlin.jvm") version "1.5.0"
+    id("org.jetbrains.intellij") version "0.7.3"
+    id("org.jetbrains.changelog") version "1.1.2"
 }
 
-group = "org.nextras.orm.intellij"
-version = "0.7.1"
+group = properties("pluginGroup")
+version = properties("pluginVersion")
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
 
 intellij {
-	pluginName = "Nextras Orm Plugin"
-	version = "2020.1"
-	updateSinceUntilBuild = false
-	downloadSources = true
-	alternativeIdePath = "C:\\dev\\jetbrains\\apps\\PhpStorm\\ch-0\\211.7142.44\\"
-	setPlugins("com.jetbrains.php:201.6668.153")
+    pluginName = properties("pluginName")
+    version = properties("platformVersion")
+    type = properties("platformType")
+    downloadSources = properties("platformDownloadSources").toBoolean()
+    updateSinceUntilBuild = true
+    setPlugins(*properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty).toTypedArray())
+
+    alternativeIdePath = "C:\\dev\\jetbrains\\apps\\PhpStorm\\ch-0\\211.7142.44\\"
+}
+
+changelog {
+    version = properties("pluginVersion")
+    path = "${project.projectDir}/changelog.md"
+    groups = listOf("Added", "Fixed", "Changed")
 }
 
 tasks {
-	withType<JavaCompile> {
-		sourceCompatibility = "1.8"
-		targetCompatibility = "1.8"
-	}
-	withType<KotlinCompile> {
-		kotlinOptions.jvmTarget = "1.8"
-	}
+    withType<JavaCompile> {
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
+    }
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    patchPluginXml {
+        version(properties("pluginVersion"))
+        sinceBuild(properties("pluginSinceBuild"))
+        untilBuild(properties("pluginUntilBuild"))
+
+        pluginDescription(
+            closure {
+                File(projectDir, "readme.md").readText().lines().run {
+                    val start = "<!-- Plugin description -->"
+                    val end = "<!-- Plugin description end -->"
+
+                    if (!containsAll(listOf(start, end))) {
+                        throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
+                    }
+                    subList(indexOf(start) + 1, indexOf(end))
+                }.joinToString("\n").run { markdownToHTML(this) }
+            }
+        )
+
+        changeNotes(
+            closure {
+                changelog.getLatest().toHTML()
+            }
+        )
+    }
+
+    runPluginVerifier {
+        ideVersions(properties("pluginVerifierIdeVersions"))
+    }
 }
