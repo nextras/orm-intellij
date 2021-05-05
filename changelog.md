@@ -1,6 +1,12 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+
+### Fixed
+
+### Changed
+## [0.8.0]
 
 ### Added
 - Added auto-completion & reference to entity properties in hasValue() method.
