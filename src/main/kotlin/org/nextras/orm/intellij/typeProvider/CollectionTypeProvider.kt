@@ -45,6 +45,11 @@ class CollectionTypeProvider : PhpTypeProvider4 {
 							type.add(subType)
 						}
 					}
+				if (type.isEmpty) {
+					parent.type.types.forEach { subType ->
+						type.add("#$key$subType")
+					}
+				}
 				return type
 			}
 			is FieldReference -> {

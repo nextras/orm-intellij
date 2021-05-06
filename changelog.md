@@ -4,8 +4,10 @@
 ### Added
 
 ### Fixed
+- Fixed entity type resolution on IModel::getRepository() expression.
 
 ### Changed
+
 ## [0.8.0]
 
 ### Added
