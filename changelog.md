@@ -1,11 +1,8 @@
 # Changelog
 
 ## [Unreleased]
-### Added
-
-### Fixed
-
 ### Changed
+
 ## [0.8.1]
 ### Added
 

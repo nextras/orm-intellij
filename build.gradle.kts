@@ -33,7 +33,7 @@ intellij {
 changelog {
     version = properties("pluginVersion")
     path = "${project.projectDir}/changelog.md"
-    groups = listOf("Added", "Fixed", "Changed")
+    groups = listOf("Changed")
 }
 
 tasks {
