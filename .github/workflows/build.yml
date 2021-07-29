@@ -23,12 +23,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # Setup Java 1.8 environment for the next steps
+      # Setup Java 11 environment for the next steps
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
-          distribution: zulu
-          java-version: 8
+          distribution: adopt
+          java-version: 11
 
       # Check out current repository
       - name: Fetch Sources
@@ -69,12 +69,12 @@ jobs:
       artifact: ${{ steps.properties.outputs.artifact }}
     steps:
 
-      # Setup Java 1.8 environment for the next steps
+      # Setup Java 11 environment for the next steps
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
-          distribution: zulu
-          java-version: 8
+          distribution: adopt
+          java-version: 11
 
       # Check out current repository
       - name: Fetch Sources
@@ -132,12 +132,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # Setup Java 1.8 environment for the next steps
+      # Setup Java 11 environment for the next steps
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
-          distribution: zulu
-          java-version: 8
+          distribution: adopt
+          java-version: 11
 
       # Check out current repository
       - name: Fetch Sources
