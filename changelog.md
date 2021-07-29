@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Changed
+-  Removed upper bound of compatibility constraint for latest PhpStorm.
 
 ## [0.8.1]
 ### Added
