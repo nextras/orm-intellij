@@ -130,6 +130,9 @@ jobs:
     name: Verify
     needs: build
     runs-on: ubuntu-latest
+    # verification fails due to:
+    # "value failed for JSON property pluginXmlId due to missing (therefore NULL) value for creator parameter pluginXmlId which is a non-nullable type"
+    if: 'false'
     steps:
 
       # Setup Java 11 environment for the next steps
@@ -184,7 +187,8 @@ jobs:
   releaseDraft:
     name: Release Draft
     if: github.event_name != 'pull_request'
-    needs: [build, verify]
+    # re-add 'verify' as a needs step once verify works again
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
 
