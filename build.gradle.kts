@@ -5,9 +5,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.5.20"
-    id("org.jetbrains.intellij") version "1.1.2"
-    id("org.jetbrains.changelog") version "1.1.2"
+    id("org.jetbrains.kotlin.jvm") version "1.5.21"
+    id("org.jetbrains.intellij") version "1.1.4"
+    id("org.jetbrains.changelog") version "1.2.1"
 }
 
 group = properties("pluginGroup")
@@ -26,14 +26,14 @@ intellij {
     version.set(properties("platformVersion"))
     type.set(properties("platformType"))
     downloadSources.set(properties("platformDownloadSources").toBoolean())
-    updateSinceUntilBuild.set(true)
     plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
+    updateSinceUntilBuild.set(false)
 }
 
 changelog {
-    version = properties("pluginVersion")
-    path = "${project.projectDir}/changelog.md"
-    groups = listOf("Changed")
+    version.set(properties("pluginVersion"))
+    path.set("${project.projectDir}/changelog.md")
+    groups.set(listOf("Changed"))
 }
 
 tasks {
@@ -47,7 +47,6 @@ tasks {
 
     patchPluginXml {
         version.set(properties("pluginVersion"))
-        sinceBuild.set(properties("pluginSinceBuild"))
 
         pluginDescription.set(
             File(projectDir, "readme.md").readText().lines().run {

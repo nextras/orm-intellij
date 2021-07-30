@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 ### Changed
+- Removed upper bound of compatibility constraint for latest PhpStorm. (Second try)
+- Updated build dependencies.
+
 ## [0.8.2]
 ### Changed
 -  Removed upper bound of compatibility constraint for latest PhpStorm.

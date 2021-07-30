@@ -6,6 +6,8 @@
 	<depends>com.intellij.modules.platform</depends>
 	<depends>com.jetbrains.php</depends>
 
+	<idea-version since-build="201.3119"/>
+
 	<extensions defaultExtensionNs="com.intellij">
 		<psi.referenceContributor
 			language="PHP"
