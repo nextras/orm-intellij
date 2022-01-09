@@ -29,6 +29,8 @@
 
 		<referencesSearch implementation="org.nextras.orm.intellij.reference.ReferenceSearcher"/>
 
+		<implicitUsageProvider implementation="org.nextras.orm.intellij.usageProvider.EntityUsageProvider"/>
+
 		<localInspection
 			language="PHP"
 			implementationClass="org.nextras.orm.intellij.inspection.ReadOnlyPropertyInspection"

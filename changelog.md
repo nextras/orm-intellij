@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 ### Changed
+- Added support for marking entity getters/setters as implicitly used; closes #12
+
+## [0.8.3]
+### Changed
 - Removed upper bound of compatibility constraint for latest PhpStorm. (Second try)
 - Updated build dependencies.
 
