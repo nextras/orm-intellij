@@ -11,12 +11,17 @@ import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty
 import com.jetbrains.php.lang.psi.PhpPsiUtil
 import com.jetbrains.php.lang.psi.elements.PhpClass
+import com.jetbrains.php.lang.psi.elements.PhpNamespace
 import org.nextras.orm.intellij.utils.OrmUtils
 
 class SetReadOnlyValueCompletionProvider : CompletionProvider<CompletionParameters>() {
-	override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet) {
+	override fun addCompletions(
+		parameters: CompletionParameters,
+		context: ProcessingContext,
+		result: CompletionResultSet
+	) {
 		val el = parameters.position
-		val cls = PhpPsiUtil.getParentByCondition<PhpClass>(el, PhpClass.INSTANCEOF) ?: return
+		val cls = PhpPsiUtil.getParentByCondition<PhpClass>(el, PhpClass.INSTANCEOF, PhpNamespace.INSTANCEOF) ?: return
 
 		val phpIndex = PhpIndex.getInstance(el.project)
 		if (!OrmUtils.OrmClass.ENTITY.`is`(cls, phpIndex)) {

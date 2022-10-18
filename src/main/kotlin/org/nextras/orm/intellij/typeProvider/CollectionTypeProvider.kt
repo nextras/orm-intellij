@@ -31,7 +31,6 @@ class CollectionTypeProvider : PhpTypeProvider4 {
 		val isPluralMethod = pluralMethods.contains(methodName)
 		val arraySuffix = if (isPluralMethod) "[]" else ""
 
-		@Suppress("MoveVariableDeclarationIntoWhen")
 		val parent = element.classReference!!
 		when (parent) {
 			is MethodReference -> {

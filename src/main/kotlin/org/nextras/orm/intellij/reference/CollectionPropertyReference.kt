@@ -34,7 +34,7 @@ class CollectionPropertyReference constructor(
 			.toSet()
 			.map {
 				object : ResolveResult {
-					override fun getElement(): PsiElement? {
+					override fun getElement(): PsiElement {
 						return it
 					}
 
