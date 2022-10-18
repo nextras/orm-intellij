@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Changed
 - Added support for marking entity getters/setters as implicitly used; closes #12
+- Fixed support for PHPStorm 2022.3 EAP, minimal version is PHPStorm 2022.3.
 
 ## [0.8.3]
 ### Changed
