@@ -35,7 +35,7 @@ class SetReadOnlyValueCompletionProvider : CompletionProvider<CompletionParamete
 						insertionContext.editor.caretModel.moveToOffset(insertionContext.startOffset + phpCode.length - 2)
 					}
 					.withTypeText(it.type.toString())
-					.withIcon(PhpIcons.VARIABLE_WRITE_ACCESS)
+					.withIcon(PhpIcons.READONLY_FIELD)
 					.withPresentableText(it.name + " = ...")
 			}
 			.forEach { result.addElement(it) }
