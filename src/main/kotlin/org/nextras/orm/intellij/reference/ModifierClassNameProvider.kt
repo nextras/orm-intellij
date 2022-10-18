@@ -26,13 +26,21 @@ class ModifierClassNameProvider : PsiReferenceProvider() {
 							PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER).withText("m")
 						)
 					),
+					PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER).withText("1").afterLeaf(
+						PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_TEXT).withText(":").afterLeaf(
+							PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER).withText("m")
+						)
+					),
 					PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER).withText("m").afterLeaf(
-						PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_TEXT).withText("1:")
+						PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_TEXT).withText(":").afterLeaf(
+							PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER).withText("1")
+						)
 					),
-					PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_TEXT).withText(":1").afterLeaf(
-						PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER).withText("m")
+					PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER).withText("1").afterLeaf(
+						PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_TEXT).withText(":").afterLeaf(
+							PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER).withText("1")
+						)
 					),
-					PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_TEXT).withText("1:1")
 				)
 			)
 			.withLanguage(PhpLanguage.INSTANCE)
