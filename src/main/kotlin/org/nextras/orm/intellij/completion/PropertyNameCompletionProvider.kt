@@ -40,7 +40,7 @@ class PropertyNameCompletionProvider : CompletionProvider<CompletionParameters>(
 			.forEach {
 				result.addElement(
 					LookupElementBuilder.create(it.name)
-						.withIcon(PhpIcons.FIELD_ICON)
+						.withIcon(PhpIcons.FIELD)
 						.withTypeText(it.type.toString())
 				)
 			}

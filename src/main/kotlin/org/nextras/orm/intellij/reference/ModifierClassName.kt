@@ -20,7 +20,7 @@ class ModifierClassName(
 			.filter { OrmUtils.OrmClass.ENTITY.`is`(it, phpIndex) }
 			.map {
 				object : ResolveResult {
-					override fun getElement(): PsiElement? {
+					override fun getElement(): PsiElement {
 						return it
 					}
 

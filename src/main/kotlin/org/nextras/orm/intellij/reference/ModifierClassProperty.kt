@@ -24,7 +24,7 @@ class ModifierClassProperty(
 			.filterIsInstance<PhpDocProperty>()
 			.map {
 				object : ResolveResult {
-					override fun getElement(): PsiElement? {
+					override fun getElement(): PsiElement {
 						return it
 					}
 

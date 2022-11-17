@@ -76,7 +76,7 @@ class EntityPropertiesProvider {
 					result.addElement(
 						LookupElementBuilder.create(strPath + sep)
 							.withPresentableText(fieldName)
-							.withIcon(PhpIcons.FIELD_ICON)
+							.withIcon(PhpIcons.FIELD)
 							.withTypeText(types.joinToString("|"))
 					)
 				}
@@ -85,7 +85,7 @@ class EntityPropertiesProvider {
 					result.addElement(
 						LookupElementBuilder.create("this->")
 							.withPresentableText("this")
-							.withIcon(PhpIcons.CLASS_ICON)
+							.withIcon(PhpIcons.CLASS)
 							.withTypeText(cls.type.toString())
 					)
 				}
@@ -93,7 +93,7 @@ class EntityPropertiesProvider {
 					result.addElement(
 						LookupElementBuilder.create(cls.fqn + classSuffix)
 							.withPresentableText(cls.fqn)
-							.withIcon(PhpIcons.CLASS_ICON)
+							.withIcon(PhpIcons.CLASS)
 							.withTypeText(cls.type.toString())
 					)
 			}

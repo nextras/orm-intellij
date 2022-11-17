@@ -17,7 +17,7 @@ class CollectionClassReference constructor(
 		val classes = OrmUtils.findQueriedEntities(methodReference, name, arrayOf())
 		return classes.map {
 			object : ResolveResult {
-				override fun getElement(): PsiElement? {
+				override fun getElement(): PsiElement {
 					return it
 				}
 

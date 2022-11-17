@@ -24,7 +24,7 @@ class EntityPropertyReference(psiElement: StringLiteralExpression) : PsiPolyVari
 			.filterIsInstance<PhpDocProperty>()
 			.map {
 				object : ResolveResult {
-					override fun getElement(): PsiElement? {
+					override fun getElement(): PsiElement {
 						return it
 					}
 

@@ -18,7 +18,7 @@ class ModifierHighlighterSettings : ColorSettingsPage {
 	}
 
 	override fun getDemoText(): String {
-		return "<?php\n// Sadly, there is no way how to preview your color settings in here."
+		return "<?php\n// IntelliJ IDEs do not support previewing custom highlighter here."
 	}
 
 	override fun getAdditionalHighlightingTagToDescriptorMap(): Map<String, TextAttributesKey>? {

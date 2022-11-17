@@ -1,13 +1,12 @@
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.intellij.ideaDir
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.7.20"
-    id("org.jetbrains.intellij") version "1.9.0"
-    id("org.jetbrains.changelog") version "1.3.1"
+    id("org.jetbrains.kotlin.jvm") version "1.7.21"
+    id("org.jetbrains.intellij") version "1.10.0"
+    id("org.jetbrains.changelog") version "2.0.0"
 }
 
 group = properties("pluginGroup")
@@ -22,11 +21,10 @@ dependencies {
 }
 
 intellij {
+    type.set("PS")
+    version.set("223-EAP-SNAPSHOT")
+    plugins.set(listOf("com.jetbrains.php:223.7571.15")) // 2022.3 beta 2
     pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
-    type.set(properties("platformType"))
-    downloadSources.set(properties("platformDownloadSources").toBoolean())
-    plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
     updateSinceUntilBuild.set(false)
 }
 
@@ -37,6 +35,10 @@ changelog {
 }
 
 tasks {
+    buildSearchableOptions {
+        enabled = false
+    }
+
     withType<JavaCompile> {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
