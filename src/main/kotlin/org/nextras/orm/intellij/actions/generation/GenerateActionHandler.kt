@@ -33,38 +33,40 @@ abstract class GenerateActionHandler : CodeInsightActionHandler {
 	}
 
 	override fun invoke(project: Project, editor: Editor, file: PsiFile) {
-		val phpFile = file as PhpFile
-		val phpClass = PhpCodeEditUtil.findClassAtCaret(editor, phpFile)
+		ApplicationManager.getApplication().run {
+			val phpFile = file as PhpFile
+			val phpClass = PhpCodeEditUtil.findClassAtCaret(editor, phpFile)
 
-		val fields = getFields(phpClass!!)
-		val nodes = this.convertToNodes(fields)
+			val fields = getFields(phpClass!!)
+			val nodes = convertToNodes(fields)
 
-		val chooser = MemberChooser(nodes, false, true, project)
-		chooser.title = "Choose Fields"
-		chooser.setCopyJavadocVisible(false)
-		val isOk = chooser.showAndGet()
-		val list = chooser.selectedElements
+			val chooser = MemberChooser(nodes, false, true, project)
+			chooser.title = "Choose Fields"
+			chooser.setCopyJavadocVisible(false)
+			val isOk = chooser.showAndGet()
+			val list = chooser.selectedElements
 
-		if (!isOk || list == null || list.size == 0) {
-			return
-		}
-
-		val insertPos = getSuitableEditorPosition(editor, phpFile)
-
-		ApplicationManager.getApplication().runWriteAction {
-			val textBuf = StringBuffer()
-
-			for (member in list) {
-				val field = member.psiElement
-				textBuf.append('\n')
-				textBuf.append(this@GenerateActionHandler.createAccessors(field as Field, project))
+			if (!isOk || list == null || list.size == 0) {
+				return
 			}
 
-			if (textBuf.isNotEmpty() && insertPos >= 0) {
-				editor.document.insertString(insertPos, textBuf)
-				val endPos = insertPos + textBuf.length
-				CodeStyleManager.getInstance(project).reformatText(phpFile, insertPos, endPos)
-				PsiDocumentManager.getInstance(project).commitDocument(editor.document)
+			val insertPos = getSuitableEditorPosition(editor, phpFile)
+
+			ApplicationManager.getApplication().runWriteAction {
+				val textBuf = StringBuffer()
+
+				for (member in list) {
+					val field = member.psiElement
+					textBuf.append('\n')
+					textBuf.append(this@GenerateActionHandler.createAccessors(field as Field, project))
+				}
+
+				if (textBuf.isNotEmpty() && insertPos >= 0) {
+					editor.document.insertString(insertPos, textBuf)
+					val endPos = insertPos + textBuf.length
+					CodeStyleManager.getInstance(project).reformatText(phpFile, insertPos, endPos)
+					PsiDocumentManager.getInstance(project).commitDocument(editor.document)
+				}
 			}
 		}
 	}
