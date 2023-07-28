@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Changed
+- Fix compatibility with the latest PHPStorm.
+- Internal library updates.
 
 ## 0.9.0 - 2022-11-17
 
