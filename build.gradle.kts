@@ -1,12 +1,13 @@
+import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.7.21"
-    id("org.jetbrains.intellij") version "1.10.0"
-    id("org.jetbrains.changelog") version "2.0.0"
+    id("org.jetbrains.kotlin.jvm") version "1.9.0"
+    id("org.jetbrains.intellij") version "1.15.0"
+    id("org.jetbrains.changelog") version "2.1.2"
 }
 
 group = properties("pluginGroup")
@@ -22,8 +23,8 @@ dependencies {
 
 intellij {
     type.set("PS")
-    version.set("223-EAP-SNAPSHOT")
-    plugins.set(listOf("com.jetbrains.php:223.7571.15")) // 2022.3 beta 2
+    version.set("PS-2022.3.1")
+    plugins.set(listOf("com.jetbrains.php"))
     pluginName.set(properties("pluginName"))
     updateSinceUntilBuild.set(false)
 }
@@ -62,7 +63,7 @@ tasks {
             }.joinToString("\n").run { markdownToHTML(this) }
         )
 
-        changeNotes.set(provider { changelog.getLatest().toHTML() })
+        changeNotes.set(provider { changelog.renderItem(changelog.getLatest(), Changelog.OutputType.HTML) })
     }
 
     runPluginVerifier {
