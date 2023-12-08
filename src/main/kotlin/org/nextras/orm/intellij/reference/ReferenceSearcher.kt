@@ -13,7 +13,7 @@ import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 class ReferenceSearcher : QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters>() {
 	override fun processQuery(searchParameters: ReferencesSearch.SearchParameters, processor: Processor<in PsiReference>) {
 		val property = searchParameters.elementToSearch as? PhpDocProperty ?: return
-		val providers = arrayOf(CollectionPropertyReferenceProvider(), PropertyNameReferenceProvider())
+		val providers = arrayOf(CollectionPropertyReferenceProvider(), EntityPropertyNameReferenceProvider())
 
 		PsiSearchHelper.getInstance(property.project)
 			.processElementsWithWord(

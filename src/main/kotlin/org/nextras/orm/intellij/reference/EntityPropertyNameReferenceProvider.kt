@@ -7,14 +7,18 @@ import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 
-class PropertyNameReferenceProvider : PsiReferenceProvider() {
+/**
+ * Makes property reference in methods like `$this->getProperty('title')`.
+ * This makes it clickable to the property definition.
+ */
+class EntityPropertyNameReferenceProvider : PsiReferenceProvider() {
 	override fun getReferencesByElement(el: PsiElement, processingContext: ProcessingContext): Array<PsiReference> {
 		assert(el is StringLiteralExpression)
 		val method = el.parent?.parent as? MethodReference ?: return emptyArray()
 
 		return when (method.name) {
 			"setValue", "setReadOnlyValue", "getValue", "hasValue", "getProperty", "getRawProperty" -> {
-				arrayOf(EntityPropertyReference(el as StringLiteralExpression))
+				arrayOf(EntityPropertyNameReference(el as StringLiteralExpression))
 			}
 			else -> {
 				emptyArray()
