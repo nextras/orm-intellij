@@ -100,6 +100,6 @@ class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
 	}
 
 	companion object {
-		private val fieldExpression = Pattern.compile("^((?:[\\w\\\\]+::)?(\\w*)?(?:->\\w*)*)(!|!=|<=|>=|=|>|<)?$")
+		private val fieldExpression = Pattern.compile("^((?:[\\w\\\\]+::)?(\\w*)?(?:->\\w*)*)(!|!=|<=|>=|=|>|<|~)?$")
 	}
 }
