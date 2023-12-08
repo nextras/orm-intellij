@@ -5,7 +5,12 @@ import com.intellij.psi.PsiReference
 import com.intellij.psi.PsiReferenceProvider
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.parser.PhpElementTypes
-import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
+import com.jetbrains.php.lang.psi.elements.ArrayHashElement
+import com.jetbrains.php.lang.psi.elements.MethodReference
+import com.jetbrains.php.lang.psi.elements.ParameterList
+import com.jetbrains.php.lang.psi.elements.PhpPsiElement
+import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import org.nextras.orm.intellij.utils.OrmUtils
 import java.util.regex.Pattern
 
@@ -14,16 +19,12 @@ class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
 		val ref = getMethodReference(psiElement) ?: return emptyArray()
 
 		val content = (psiElement as StringLiteralExpression).contents
-		val isV3 = OrmUtils.isV3(psiElement.project)
-		val matcher = when (isV3) {
-			true -> fieldExpressionV3.matcher(content)
-			false -> fieldExpressionV4.matcher(content)
-		}
+		val matcher = fieldExpression.matcher(content)
 		if (!matcher.matches()) {
 			return emptyArray()
 		}
 
-		val (sourceCls, path) = OrmUtils.parsePathExpression(matcher.group(1), isV3)
+		val (sourceCls, path) = OrmUtils.parsePathExpression(matcher.group(1))
 		if (sourceCls == null && path.isEmpty()) {
 			return emptyArray()
 		}
@@ -99,7 +100,6 @@ class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
 	}
 
 	companion object {
-		private val fieldExpressionV3 = Pattern.compile("^([\\w\\\\]+(?:->\\w*)*)(!|!=|<=|>=|=|>|<)?$")
-		private val fieldExpressionV4 = Pattern.compile("^((?:[\\w\\\\]+::)?(\\w*)?(?:->\\w*)*)(!|!=|<=|>=|=|>|<)?$")
+		private val fieldExpression = Pattern.compile("^((?:[\\w\\\\]+::)?(\\w*)?(?:->\\w*)*)(!|!=|<=|>=|=|>|<)?$")
 	}
 }

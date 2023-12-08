@@ -4,6 +4,7 @@
 
 ### Changed
 - Remove entity type propagation on repository/collection/relationships in `find*`/`get*` and similar methods. This functionality is now built-in in PHPStorm as it supports enough of generics. 
+- Drop support for Orm v3
 
 ## 0.9.1 - 2023-07-28
 
