@@ -17,7 +17,7 @@ class OrmReferenceContributor : PsiReferenceContributor() {
 		)
 		psiReferenceRegistrar.registerReferenceProvider(
 			PlatformPatterns.psiElement(PhpElementTypes.STRING),
-			PropertyNameReferenceProvider()
+			EntityPropertyNameReferenceProvider()
 		)
 		psiReferenceRegistrar.registerReferenceProvider(
 			PlatformPatterns.psiElement(PhpElementTypes.STRING),

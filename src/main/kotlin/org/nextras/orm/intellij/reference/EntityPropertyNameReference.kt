@@ -10,7 +10,7 @@ import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import org.nextras.orm.intellij.utils.OrmUtils
 import org.nextras.orm.intellij.utils.PhpIndexUtils
 
-class EntityPropertyReference(psiElement: StringLiteralExpression) : PsiPolyVariantReferenceBase<StringLiteralExpression>(psiElement) {
+class EntityPropertyNameReference(psiElement: StringLiteralExpression) : PsiPolyVariantReferenceBase<StringLiteralExpression>(psiElement) {
 	override fun multiResolve(b: Boolean): Array<ResolveResult> {
 		val expr = element
 		assert(expr.parent.parent != null)

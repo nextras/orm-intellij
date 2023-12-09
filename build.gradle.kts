@@ -23,7 +23,7 @@ dependencies {
 
 intellij {
     type.set("PS")
-    version.set("PS-2022.3.1")
+    version.set("PS-2023.3")
     plugins.set(listOf("com.jetbrains.php"))
     pluginName.set(properties("pluginName"))
     updateSinceUntilBuild.set(false)

@@ -41,11 +41,6 @@
 			level="WARNING"/>
 	</extensions>
 
-	<extensions defaultExtensionNs="com.jetbrains.php">
-		<typeProvider4 implementation="org.nextras.orm.intellij.typeProvider.PersistenceMethodsTypeProvider"/>
-		<typeProvider4 implementation="org.nextras.orm.intellij.typeProvider.CollectionTypeProvider"/>
-	</extensions>
-
 	<actions>
 		<group id="org.nextras.orm.intellij.generate">
 			<add-to-group group-id="GenerateGroup" anchor="first"/>

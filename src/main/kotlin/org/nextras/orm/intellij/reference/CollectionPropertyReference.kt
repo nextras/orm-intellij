@@ -9,6 +9,10 @@ import com.jetbrains.php.lang.psi.elements.MethodReference
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import org.nextras.orm.intellij.utils.OrmUtils
 
+/**
+ * Makes property reference in methods like `$collection->findBy(['title' => 'value'])`. Supports traversing
+ * on the path. This makes it clickable to the property definition.
+ */
 class CollectionPropertyReference constructor(
 	element: StringLiteralExpression,
 	private val methodReference: MethodReference,

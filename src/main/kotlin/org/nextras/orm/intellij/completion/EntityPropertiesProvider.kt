@@ -36,17 +36,12 @@ class EntityPropertiesProvider {
 			return
 		}
 
-		val project = parameters.editor.project ?: return
 		val fieldExpression = parameters.originalPosition!!.text
 		val fieldExpressionLen = parameters.editor.caretModel.offset - parameters.originalPosition!!.textOffset
 		val expression = fieldExpression.substring(0, fieldExpressionLen)
 
-		val isV3 = OrmUtils.isV3(project)
-		val (sourceCls, path) = OrmUtils.parsePathExpression(expression, isV3)
-		val classSuffix = when (isV3) {
-			true -> "->"
-			false -> "::"
-		}
+		val (sourceCls, path) = OrmUtils.parsePathExpression(expression)
+		val classSuffix = "::"
 
 		val queriedEntities = OrmUtils.findQueriedEntities(context, sourceCls, path)
 		queriedEntities
@@ -81,14 +76,6 @@ class EntityPropertiesProvider {
 					)
 				}
 
-				if (isV3 && path.size == 1 && sourceCls == null) {
-					result.addElement(
-						LookupElementBuilder.create("this->")
-							.withPresentableText("this")
-							.withIcon(PhpIcons.CLASS)
-							.withTypeText(cls.type.toString())
-					)
-				}
 				if (path.size == 1 && sourceCls == null)
 					result.addElement(
 						LookupElementBuilder.create(cls.fqn + classSuffix)

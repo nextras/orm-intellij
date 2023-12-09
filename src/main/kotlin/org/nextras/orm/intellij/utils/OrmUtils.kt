@@ -1,11 +1,15 @@
 package org.nextras.orm.intellij.utils
 
-import com.intellij.openapi.project.Project
 import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty
-import com.jetbrains.php.lang.psi.elements.*
+import com.jetbrains.php.lang.psi.elements.ArrayCreationExpression
+import com.jetbrains.php.lang.psi.elements.ClassConstantReference
+import com.jetbrains.php.lang.psi.elements.GroupStatement
+import com.jetbrains.php.lang.psi.elements.MemberReference
+import com.jetbrains.php.lang.psi.elements.MethodReference
+import com.jetbrains.php.lang.psi.elements.PhpClass
+import com.jetbrains.php.lang.psi.elements.PhpReturn
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
-import java.util.*
 
 object OrmUtils {
 	enum class OrmClass constructor(private val className: String) {
@@ -26,19 +30,6 @@ object OrmUtils {
 		}
 	}
 
-	private var isV3: Boolean? = null
-
-	fun isV3(project: Project): Boolean {
-		val index = PhpIndex.getInstance(project)
-		if (isV3 != null) {
-			return isV3!!
-		}
-
-		val collectionFunction = index.getInterfacesByFQN("\\Nextras\\Orm\\Collection\\Functions\\IArrayFunction")
-		isV3 = collectionFunction.isEmpty()
-		return isV3!!
-	}
-
 	fun findRepositoryEntities(repositories: Collection<PhpClass>): Collection<PhpClass> {
 		val entities = HashSet<PhpClass>(1)
 		for (repositoryClass in repositories) {
@@ -53,7 +44,8 @@ object OrmUtils {
 				continue
 			}
 
-			val arr = (entityNamesMethod.lastChild as GroupStatement).firstPsiChild!!.firstPsiChild as ArrayCreationExpression?
+			val arr =
+				(entityNamesMethod.lastChild as GroupStatement).firstPsiChild!!.firstPsiChild as ArrayCreationExpression?
 			val phpIndex = PhpIndex.getInstance(repositoryClass.project)
 			for (el in arr!!.children) {
 				if (el.firstChild !is ClassConstantReference) {
@@ -114,31 +106,22 @@ object OrmUtils {
 		}
 	}
 
-	fun parsePathExpression(expression: String, isV3: Boolean): Pair<String?, Array<String>> {
-		if (isV3) {
-			val path = expression.split("->")
-			return when (path.size > 1) {
-				true -> Pair(
-					path.first(),
-					path.drop(1).toTypedArray()
-				)
-				false -> Pair(
-					null,
-					path.toTypedArray()
-				)
-			}
-		} else {
-			val delimiterPos = expression.indexOf("::")
-			val sourceClass = expression.substring(0, delimiterPos.coerceAtLeast(0))
-			val path = if (delimiterPos == -1) expression else expression.substring((delimiterPos + 2).coerceAtMost(expression.length))
-			return Pair(
-				sourceClass.ifEmpty { null },
-				path.split("->").toTypedArray()
-			)
-		}
+	fun parsePathExpression(expression: String): Pair<String?, Array<String>> {
+		val delimiterPos = expression.indexOf("::")
+		val sourceClass = expression.substring(0, delimiterPos.coerceAtLeast(0))
+		val path =
+			if (delimiterPos == -1) expression else expression.substring((delimiterPos + 2).coerceAtMost(expression.length))
+		return Pair(
+			sourceClass.ifEmpty { null },
+			path.split("->").toTypedArray()
+		)
 	}
 
-	private fun findTargetEntities(currentEntities: Collection<PhpClass>, path: Array<String>, pos: Int): Collection<PhpClass> {
+	private fun findTargetEntities(
+		currentEntities: Collection<PhpClass>,
+		path: Array<String>,
+		pos: Int
+	): Collection<PhpClass> {
 		if (path.size == pos + 1) {
 			return currentEntities
 		}
@@ -152,6 +135,12 @@ object OrmUtils {
 
 	private fun addEntitiesFromField(entities: MutableCollection<PhpClass>, field: PhpDocProperty) {
 		val index = PhpIndex.getInstance(field.project)
+		val candidateTypes = mutableListOf<String>()
+		for (type in field.type.typesWithParametrisedParts) {
+			if (type.contains("Nextras\\Orm\\Relationship") && type.contains("<")) {
+				candidateTypes.add(type.dropWhile { it != '<' }.removePrefix("<").removeSuffix(">"))
+			}
+		}
 		for (type in field.type.types) {
 			if (type.contains("Nextras\\Orm\\Relationship")) {
 				continue
@@ -161,7 +150,10 @@ object OrmUtils {
 			} else {
 				type
 			}
-			for (entityCls in PhpIndexUtils.getByType(PhpType().add(addType), index)) {
+			candidateTypes.add(addType)
+		}
+		for (candidateType in candidateTypes) {
+			for (entityCls in PhpIndexUtils.getByType(PhpType().add(candidateType), index)) {
 				if (!OrmClass.ENTITY.`is`(entityCls, index) && !OrmClass.EMBEDDABLE.`is`(entityCls, index)) {
 					continue
 				}
