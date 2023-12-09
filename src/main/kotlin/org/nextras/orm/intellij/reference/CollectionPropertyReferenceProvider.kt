@@ -15,7 +15,10 @@ import org.nextras.orm.intellij.utils.OrmUtils
 import java.util.regex.Pattern
 
 class CollectionPropertyReferenceProvider : PsiReferenceProvider() {
-	override fun getReferencesByElement(psiElement: PsiElement, processingContext: ProcessingContext): Array<PsiReference> {
+	override fun getReferencesByElement(
+		psiElement: PsiElement,
+		processingContext: ProcessingContext
+	): Array<PsiReference> {
 		val ref = getMethodReference(psiElement) ?: return emptyArray()
 
 		val content = (psiElement as StringLiteralExpression).contents

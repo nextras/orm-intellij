@@ -135,6 +135,12 @@ object OrmUtils {
 
 	private fun addEntitiesFromField(entities: MutableCollection<PhpClass>, field: PhpDocProperty) {
 		val index = PhpIndex.getInstance(field.project)
+		val candidateTypes = mutableListOf<String>()
+		for (type in field.type.typesWithParametrisedParts) {
+			if (type.contains("Nextras\\Orm\\Relationship") && type.contains("<")) {
+				candidateTypes.add(type.dropWhile { it != '<' }.removePrefix("<").removeSuffix(">"))
+			}
+		}
 		for (type in field.type.types) {
 			if (type.contains("Nextras\\Orm\\Relationship")) {
 				continue
@@ -144,7 +150,10 @@ object OrmUtils {
 			} else {
 				type
 			}
-			for (entityCls in PhpIndexUtils.getByType(PhpType().add(addType), index)) {
+			candidateTypes.add(addType)
+		}
+		for (candidateType in candidateTypes) {
+			for (entityCls in PhpIndexUtils.getByType(PhpType().add(candidateType), index)) {
 				if (!OrmClass.ENTITY.`is`(entityCls, index) && !OrmClass.EMBEDDABLE.`is`(entityCls, index)) {
 					continue
 				}
