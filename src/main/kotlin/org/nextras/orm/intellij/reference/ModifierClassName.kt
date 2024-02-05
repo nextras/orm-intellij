@@ -6,7 +6,6 @@ import com.intellij.psi.PsiPolyVariantReferenceBase
 import com.intellij.psi.ResolveResult
 import com.jetbrains.php.PhpIndex
 import com.jetbrains.php.lang.psi.resolve.types.PhpType
-import org.nextras.orm.intellij.utils.OrmUtils
 import org.nextras.orm.intellij.utils.PhpIndexUtils
 
 class ModifierClassName(
@@ -17,7 +16,6 @@ class ModifierClassName(
 		val phpIndex = PhpIndex.getInstance(this.element.project)
 		val result = PhpIndexUtils.getByType(PhpType().add(fqnClass), phpIndex)
 		return result
-			.filter { OrmUtils.OrmClass.ENTITY.`is`(it, phpIndex) }
 			.map {
 				object : ResolveResult {
 					override fun getElement(): PsiElement {

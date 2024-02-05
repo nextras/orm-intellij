@@ -41,6 +41,7 @@ class ModifierClassNameProvider : PsiReferenceProvider() {
 							PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER).withText("1")
 						)
 					),
+					PlatformPatterns.psiElement(PhpDocTokenTypes.DOC_IDENTIFIER).withText("wrapper"),
 				)
 			)
 			.withLanguage(PhpLanguage.INSTANCE)
