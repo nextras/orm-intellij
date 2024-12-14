@@ -1,12 +1,11 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version "2.1.0"
-    id("org.jetbrains.intellij") version "1.17.4"
+    id("org.jetbrains.intellij.platform") version "2.2.1"
     id("org.jetbrains.changelog") version "2.2.1"
 }
 
@@ -15,6 +14,9 @@ version = properties("pluginVersion")
 
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 kotlin {
@@ -22,15 +24,71 @@ kotlin {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    intellijPlatform {
+        phpstorm("2023.3")
+        bundledPlugins(listOf("com.jetbrains.php"))
+
+        pluginVerifier()
+        zipSigner()
+    }
 }
 
-intellij {
-    type.set("PS")
-    version.set("PS-2023.3")
-    plugins.set(listOf("com.jetbrains.php"))
-    pluginName.set(properties("pluginName"))
-    updateSinceUntilBuild.set(false)
+intellijPlatform {
+    pluginConfiguration {
+        version = providers.gradleProperty("pluginVersion")
+
+        description = providers.fileContents(layout.projectDirectory.file("readme.md")).asText.map {
+            val start = "<!-- Plugin description -->"
+            val end = "<!-- Plugin description end -->"
+
+            with(it.lines()) {
+                if (!containsAll(listOf(start, end))) {
+                    throw GradleException("Plugin description section not found in readme.md:\n$start ... $end")
+                }
+                subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
+            }
+        }
+
+        val changelog = project.changelog // local variable for configuration cache compatibility
+        // Get the latest available change notes from the changelog file
+        changeNotes = providers.gradleProperty("pluginVersion").map { pluginVersion ->
+            with(changelog) {
+                renderItem(
+                    (getOrNull(pluginVersion) ?: getUnreleased())
+                        .withHeader(false)
+                        .withEmptySections(false),
+                    Changelog.OutputType.HTML,
+                )
+            }
+        }
+
+        ideaVersion {
+            sinceBuild = "233"
+            untilBuild = provider { null } // unlimited
+        }
+    }
+
+    publishing {
+        token = providers.environmentVariable("PUBLISH_TOKEN")
+        // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
+        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
+        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
+        channels = providers.gradleProperty("pluginVersion")
+            .map {
+                listOf(
+                    it.substringAfter('-', "")
+                        .substringBefore('.')
+                        .ifEmpty { "default" }
+                )
+            }
+    }
+
+    pluginVerification {
+        freeArgs.addAll("-mute", "TemplateWordInPluginId")
+        ides {
+            recommended()
+        }
+    }
 }
 
 changelog {
@@ -43,38 +101,28 @@ tasks {
     buildSearchableOptions {
         enabled = false
     }
-
-
-    patchPluginXml {
-        version.set(properties("pluginVersion"))
-
-        pluginDescription.set(
-            File(projectDir, "readme.md").readText().lines().run {
-                val start = "<!-- Plugin description -->"
-                val end = "<!-- Plugin description end -->"
-
-                if (!containsAll(listOf(start, end))) {
-                    throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
-                }
-                subList(indexOf(start) + 1, indexOf(end))
-            }.joinToString("\n").run { markdownToHTML(this) }
-        )
-
-        changeNotes.set(provider { changelog.renderItem(changelog.getLatest(), Changelog.OutputType.HTML) })
-    }
-
-    runPluginVerifier {
-        ideVersions.set(
-            properties("pluginVerifierIdeVersions").split(',').map(String::trim).filter(String::isNotEmpty)
-        )
-    }
-
     publishPlugin {
-        dependsOn("patchChangelog")
-        token.set(System.getenv("PUBLISH_TOKEN"))
-        // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
-        // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
-        // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
+        dependsOn(patchChangelog)
+    }
+}
+
+intellijPlatformTesting {
+    runIde {
+        register("runIdeForUiTests") {
+            task {
+                jvmArgumentProviders += CommandLineArgumentProvider {
+                    listOf(
+                        "-Drobot-server.port=8082",
+                        "-Dide.mac.message.dialogs.as.sheets=false",
+                        "-Djb.privacy.policy.text=<!--999.999-->",
+                        "-Djb.consents.confirmation.enabled=false",
+                    )
+                }
+            }
+
+            plugins {
+                robotServerPlugin()
+            }
+        }
     }
 }
