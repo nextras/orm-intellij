@@ -17,6 +17,10 @@ repositories {
     mavenCentral()
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
@@ -40,13 +44,6 @@ tasks {
         enabled = false
     }
 
-    withType<JavaCompile> {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
-    }
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
-    }
 
     patchPluginXml {
         version.set(properties("pluginVersion"))
