@@ -1,5 +1,6 @@
 package org.nextras.orm.intellij.reference
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.QueryExecutorBase
 import com.intellij.psi.PsiReference
 import com.intellij.psi.search.PsiSearchHelper
@@ -11,31 +12,36 @@ import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 
 class ReferenceSearcher : QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters>() {
-	override fun processQuery(searchParameters: ReferencesSearch.SearchParameters, processor: Processor<in PsiReference>) {
+	override fun processQuery(
+		searchParameters: ReferencesSearch.SearchParameters,
+		processor: Processor<in PsiReference>
+	) {
 		val property = searchParameters.elementToSearch as? PhpDocProperty ?: return
 		val providers = arrayOf(CollectionPropertyReferenceProvider(), EntityPropertyNameReferenceProvider())
 
-		PsiSearchHelper.getInstance(property.project)
-			.processElementsWithWord(
-				{ psiElement, _ ->
-					if (psiElement !is StringLiteralExpression) {
-						return@processElementsWithWord true
-					}
+		ApplicationManager.getApplication().runReadAction {
+			PsiSearchHelper.getInstance(property.project)
+				.processElementsWithWord(
+					{ psiElement, _ ->
+						if (psiElement !is StringLiteralExpression) {
+							return@processElementsWithWord true
+						}
 
-					val processingContext = ProcessingContext()
-					processingContext.put("field", property.name)
-					for (provider in providers) {
-						provider.getReferencesByElement(psiElement, processingContext)
-							.filter { it.isReferenceTo(searchParameters.elementToSearch) }
-							.forEach { processor.process(it) }
-					}
+						val processingContext = ProcessingContext()
+						processingContext.put("field", property.name)
+						for (provider in providers) {
+							provider.getReferencesByElement(psiElement, processingContext)
+								.filter { it.isReferenceTo(searchParameters.elementToSearch) }
+								.forEach { processor.process(it) }
+						}
 
+						true
+					},
+					searchParameters.scopeDeterminedByUser,
+					property.name,
+					UsageSearchContext.IN_STRINGS,
 					true
-				},
-				searchParameters.scopeDeterminedByUser,
-				property.name,
-				UsageSearchContext.IN_STRINGS,
-				true
-			)
+				)
+		}
 	}
 }
