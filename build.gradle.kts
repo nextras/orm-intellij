@@ -26,7 +26,7 @@ kotlin {
 dependencies {
     intellijPlatform {
         phpstorm("2023.3")
-        bundledPlugins(listOf("com.jetbrains.php"))
+        plugin("com.jetbrains.php:233.15619.9") // 2023.3.8
 
         pluginVerifier()
         zipSigner()
