@@ -9,7 +9,9 @@
 ### Changed
 
 - Dropped support for Orm v3 and v4 - only Orm 5 is supported; specifically, the generics are well supported directly in the PhpStorm, so this functionality got broken/semi-functional here and since Orm 5 utilizes generics properly, this is now not supported here; since Orm 4 is not using generics fully, this plugin will not bring there the type resolution anymore.
-- Fix missing support for like operator preventing reference detection in findBy()`ManyHasMany<AnotherEntity>`
+- Fix missing support for like operator preventing reference detection in `findBy()` methods.
+- Add support for resolving filtering expressions when a relationship is defined by a generic `ManyHasMany<AnotherEntity>`.
+- Fix an exception when searching usages.
 
 ## 0.9.1 - 2023-07-28
 
