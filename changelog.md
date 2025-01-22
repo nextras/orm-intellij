@@ -4,6 +4,8 @@
 
 ### Changed
 
+- Fixed autocompletion & reference contribution (ctrl+click) in `findBy()` methods on various complex expression.
+
 ## 2.0.0 - 2024-12-15
 
 ### Changed
