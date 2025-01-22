@@ -1,8 +1,8 @@
-Nextras ORM Plugin for PhpStorm
+Nextras Orm Plugin for PhpStorm
 ===============================
 
 <!-- Plugin description -->
-Provides support for [Nextras ORM](https://github.com/nextras/orm) – an ORM library for PHP.
+Provides support for [Nextras Orm](https://github.com/nextras/orm) – an ORM library for PHP.
 
 Supported features:
 - **Entity modifiers highlighting** - see clearly your modifiers;
@@ -16,13 +16,7 @@ Supported features:
 
 ### Provisioning
 
-- Install [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/)
-- Install PHP plugin
-- Open this project
-- In `build.gradle` set a proper path to your PhpStorm / comment out the `alternativeIdePath` to debug in IEDA Ultimate
-
-### Debug
-
-- Run, Edit Configurations, +, Plugin
-- keep defaults, but change Use classpath of module from `[none]` to `nextras-orm-plugin`
-- optionally change JRE to PHPStorm
+- Install IntelliJ IDEA Community or Ultimate
+- Clone & Open this project
+- Make changes, Run plugin and debug
+- Open PR with changed, fill `changelog.md` in the `Unreleased` section.
