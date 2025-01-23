@@ -2,13 +2,15 @@
 
 ## Unreleased
 
+- Fixed autocompletion & reference contribution (ctrl+click) in `getBy()` methods on various complex expression. #106
+
 ### Changed
 
 ## 2.0.1 - 2025-01-22
 
 ### Changed
 
-- Fixed autocompletion & reference contribution (ctrl+click) in findBy()
+- Fixed autocompletion & reference contribution (ctrl+click) in `findBy()` methods on various complex expression. #103
 
 ## 2.0.0 - 2024-12-15
 
