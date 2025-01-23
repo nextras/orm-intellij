@@ -29,9 +29,17 @@ object OrmUtils {
 	fun findQueriedEntities(ref: MemberReference): Collection<PhpClass> {
 		val phpIndex = PhpIndex.getInstance(ref.project)
 		val completedType = phpIndex.completeType(ref.project, ref.type, null)
-		val types = completedType.typesWithParametrisedParts.mapNotNull { type ->
-			if (!type.contains(OrmClass.COLLECTION.className)) return@mapNotNull null
-			PhpType.getParametrizedParts(type).firstOrNull()
+		val isCollectionKind = ref.name?.startsWith("getBy") != true
+		val types = when (isCollectionKind) {
+			true -> {
+				completedType.typesWithParametrisedParts.mapNotNull { type ->
+					if (!type.contains(OrmClass.COLLECTION.className)) return@mapNotNull null
+					PhpType.getParametrizedParts(type).firstOrNull()
+				}
+			}
+			false -> {
+				completedType.types
+			}
 		}
 		return types.flatMap { PhpIndexUtils.getByType(PhpType().add(it), phpIndex) }
 	}
