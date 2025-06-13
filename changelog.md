@@ -4,6 +4,10 @@
 
 ### Changed
 
+## 2.0.4 - 2025-06-13
+
+### Changed
+
 - Fixed auto-importing autocompleted class name in modifiers.
 
 ## 2.0.3 - 2025-06-13
