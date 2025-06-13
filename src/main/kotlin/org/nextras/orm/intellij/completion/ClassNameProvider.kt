@@ -9,6 +9,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.PhpIcons
 import com.jetbrains.php.PhpIndex
+import com.jetbrains.php.completion.insert.PhpReferenceInsertHandler
 
 class ClassNameProvider(
 	private val parentInterface: String,
@@ -32,9 +33,10 @@ class ClassNameProvider(
 			val className = phpClass.name
 			val fqName = phpClass.fqn
 
-			val element = LookupElementBuilder.create(className)
+			val element = LookupElementBuilder.create(phpClass)
 				.withTypeText(fqName, true)
 				.withIcon(PhpIcons.CLASS)
+				.withInsertHandler(PhpReferenceInsertHandler.getInstance())
 
 			result.addElement(element)
 			true
