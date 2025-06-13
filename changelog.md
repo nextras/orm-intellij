@@ -5,6 +5,11 @@
 ### Changed
 
 - Added autocompletion for class names in modifiers `{wrapper }`, `{m:1 }`, `{1:m}`, `{m:m }`, `{1:1 }`.
+
+## 2.0.2 - 2025-01-23
+
+### Changed
+
 - Fixed autocompletion & reference contribution (ctrl+click) in `getBy()` methods on various complex expression. #106
 
 ## 2.0.1 - 2025-01-22
