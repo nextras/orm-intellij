@@ -4,7 +4,11 @@
 
 ### Changed
 
-- Added autocompletion for class names in modifiers `{wrapper }`, `{m:1 }`, `{1:m}`, `{m:m }`, `{1:1 }`.
+## 2.0.3 - 2025-06-13
+
+### Changed
+
+- Added autocompletion for class names in modifiers {wrapper }{m:1 }{1:m }{m:m }{1:1 }
 
 ## 2.0.2 - 2025-01-23
 
