@@ -4,15 +4,20 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiReferenceContributor
 import com.intellij.psi.PsiReferenceRegistrar
 import com.jetbrains.php.lang.parser.PhpElementTypes
+import org.nextras.orm.intellij.patterns.ModifierPatterns
 
 class OrmReferenceContributor : PsiReferenceContributor() {
 	override fun registerReferenceProviders(psiReferenceRegistrar: PsiReferenceRegistrar) {
 		psiReferenceRegistrar.registerReferenceProvider(
-			ModifierClassNameProvider.PATTERN,
+			ModifierPatterns.RelationshipClassName,
 			ModifierClassNameProvider()
 		)
 		psiReferenceRegistrar.registerReferenceProvider(
-			ModifierClassPropertyProvider.PATTERN,
+			ModifierPatterns.WrapperClassName,
+			ModifierClassNameProvider()
+		)
+		psiReferenceRegistrar.registerReferenceProvider(
+			ModifierPatterns.RelationshipProperty,
 			ModifierClassPropertyProvider()
 		)
 		psiReferenceRegistrar.registerReferenceProvider(

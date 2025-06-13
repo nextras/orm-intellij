@@ -14,7 +14,9 @@ object OrmUtils {
 		REPOSITORY("\\Nextras\\Orm\\Repository\\IRepository"),
 		ENTITY("\\Nextras\\Orm\\Entity\\IEntity"),
 		HAS_MANY("\\Nextras\\Orm\\Relationships\\HasMany"),
-		EMBEDDABLE("\\Nextras\\Orm\\Entity\\Embeddable\\IEmbeddable");
+		EMBEDDABLE("\\Nextras\\Orm\\Entity\\Embeddable\\IEmbeddable"),
+		PROPERTY_WRAPPER("\\Nextras\\Orm\\Entity\\IProperty"),
+		;
 
 		fun `is`(cls: PhpClass, index: PhpIndex): Boolean {
 			val classes = index.getAnyByFQN(className)
