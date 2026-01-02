@@ -1,0 +1,6 @@
+[*.kt]
+tab_width = 4
+indent_size = tab
+indent_style = tab
+trim_trailing_whitespace = true
+ij_kotlin_allow_trailing_comma = true
