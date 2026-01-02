@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fixed crash in RepositoryMapperMethodMarkerProvider
+
 ### Changed
 
 ## 2.0.4 - 2025-06-13
